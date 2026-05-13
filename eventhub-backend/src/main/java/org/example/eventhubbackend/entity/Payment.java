@@ -7,9 +7,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+//nom de table
 @Table(name = "payments")
+//get et set
 @Getter
 @Setter
+//constructeur
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

@@ -8,8 +8,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "events")
+//getter et setter de variable
 @Getter
 @Setter
+// constructeur
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,25 +24,22 @@ public class Event {
 
     @Column(columnDefinition = "TEXT")
     private String description;
-
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-
     private String location;
     private String address;
     private String city;
-    
-
     private Integer capacity;
-    private String imageUrl;
-
+    @Enumerated(EnumType.STRING)
+    private EventCategory category;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
     @Enumerated(EnumType.STRING)
     private EventStatus status = EventStatus.DRAFT;
-
+    @OneToMany(mappedBy = "event",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EventMedia>media;
     @ManyToOne
     @JoinColumn(name = "organizer_id")
     private User organizer;
