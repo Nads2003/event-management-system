@@ -1,4 +1,5 @@
 package org.example.eventhubbackend.entity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -37,9 +38,11 @@ public class Event {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private EventStatus status = EventStatus.DRAFT;
     @OneToMany(mappedBy = "event",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EventMedia>media;
+    @JsonIgnoreProperties({"events", "reservations", "password"})
     @ManyToOne
     @JoinColumn(name = "organizer_id")
     private User organizer;

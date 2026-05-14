@@ -1,5 +1,6 @@
 package org.example.eventhubbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,5 +19,6 @@ public class EventMedia {
     private  MediaType type;
     @ManyToOne
     @JoinColumn(name = "event_id")
+    @JsonIgnore
     private  Event event;
 }
