@@ -37,6 +37,7 @@ public class Event {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private EventStatus status = EventStatus.DRAFT;
     @OneToMany(mappedBy = "event",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EventMedia>media;

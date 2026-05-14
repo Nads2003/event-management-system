@@ -1,4 +1,5 @@
 package org.example.eventhubbackend.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,8 +39,10 @@ public class User {
     private Role role = Role.USER;
 
     @OneToMany(mappedBy = "organizer")
+    @JsonIgnore
     private List<Event> events;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Reservation> reservations;
 }
