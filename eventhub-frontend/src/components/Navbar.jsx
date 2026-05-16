@@ -99,7 +99,7 @@ border-b border-gray-200 dark:border-gray-700 shadow-lg">
             {/* Dark Mode */}
             <button
               onClick={toggleTheme}
-              className="p-3 rounded-2xl bg-gray-100 dark:bg-gray-800 hover:bg-indigo-100 dark:hover:bg-gray-700 transition"
+              className="p-3 rounded-2xl bg-gray-100 dark:bg-gray-800 dark:text-white hover:bg-indigo-100 dark:hover:bg-gray-700 transition"
             >
               {darkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
@@ -107,7 +107,7 @@ border-b border-gray-200 dark:border-gray-700 shadow-lg">
             {/* Notifications */}
             <Link
               to="/notifications"
-              className="relative p-3 rounded-2xl bg-gray-100 dark:bg-gray-800 hover:bg-indigo-100 transition"
+              className="relative p-3 rounded-2xl bg-gray-100 dark:bg-gray-800 dark:text-white hover:bg-indigo-100 transition"
             >
               <Bell size={20} />
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>

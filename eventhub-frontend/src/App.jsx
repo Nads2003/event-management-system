@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Contenus from "./pages/Contenus";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
 
 function App() {
 
@@ -10,7 +11,8 @@ function App() {
     <div >
       <Navbar/>
       <Routes>
-        
+        <Route path="/login" element={<Login />} />
+<Route path="/register" element={<Register />} />
       </Routes>
     </div>
   );
