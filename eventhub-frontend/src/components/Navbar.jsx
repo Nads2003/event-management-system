@@ -70,8 +70,8 @@ border-b border-gray-200 dark:border-gray-700 shadow-lg">
               </button>
 
               {eventDropdown && (
-                <div className="absolute top-12 left-0 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border p-3 animate-fadeIn">
-                  <Link to="/events" className="block px-4 py-3 rounded-xl hover:bg-indigo-50 dark:hover:bg-gray-700">
+                <div className="absolute top-12 left-0 w-56 bg-white dark:bg-gray-800 dark:text-white  rounded-2xl shadow-2xl border p-3 animate-fadeIn">
+                  <Link to="/events" className="block px-4 py-3 rounded-xl hover:bg-indigo-50 dark:hover:bg-gray-700 ">
                     Tous les événements
                   </Link>
                   <Link to="/mes-events" className="block px-4 py-3 rounded-xl hover:bg-indigo-50 dark:hover:bg-gray-700">
