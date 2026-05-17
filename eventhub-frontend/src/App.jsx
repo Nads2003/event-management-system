@@ -4,7 +4,7 @@ import Contenus from "./pages/Contenus";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
-
+import Events from "./pages/event/Event";
 
 function App() {
 
@@ -16,6 +16,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Home />} />
         <Route path="/contenus" element={<Contenus />} />
+        <Route path="/events" element={<Events />} />
       </Routes>
     </div>
   );
