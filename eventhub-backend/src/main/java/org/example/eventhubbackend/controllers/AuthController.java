@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -32,8 +35,14 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         try {
-            String token = userService.loginUser(user.getEmail(), user.getPassword());
-            return ResponseEntity.ok(token);
+            User existing = userService.findByEmail(user.getEmail());
+            String token = userService.loginUser(
+                    user.getEmail(),
+                    user.getPassword());
+            return ResponseEntity.ok(Map.of(
+                    "toke",token,
+                    "role",existing.getRole().name()
+            ));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
