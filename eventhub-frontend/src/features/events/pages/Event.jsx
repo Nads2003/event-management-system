@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Calendar, MapPin, Ticket, Search } from "lucide-react";
-import Footer from "../footer/Footer";
 export default function Events() {
   const [search, setSearch] = useState("");
 
@@ -42,7 +41,7 @@ export default function Events() {
   );
 
   return (
-    <div className="min-h-screen pt-28 px-6 lg:px-16
+    <div className="min-h-screen pt-28 px-6 lg:px-16 pb-5
       bg-gradient-to-br from-indigo-50 via-white to-purple-100
       dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950">
 
@@ -144,7 +143,7 @@ export default function Events() {
             </div>
           </div>
         ))}
-        <Footer/>
+       
 
       </div>
     </div>
