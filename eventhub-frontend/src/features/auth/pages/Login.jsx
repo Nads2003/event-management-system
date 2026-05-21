@@ -1,19 +1,16 @@
+import { useAuth } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { Mail, Lock, Calendar,Eye,EyeOff } from "lucide-react";
 import { useState } from "react";
-import { loginUser } from "../../api/auth";
-import { useNavigate } from "react-router-dom";
-
-
 
 export default function Login() {
-  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
   
-  const [loading, setLoading] = useState(false);
+
   const [showPassword, setShowPassword] = useState(false);
   const handleChange = (e) => {
     setForm({ ...form, 
@@ -21,32 +18,18 @@ export default function Login() {
     });
   };
 
-  const handleSubmit = async(e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await loginUser(form);
-      console.log("User connecté :", res.data);
-      const {token, role} = res.data;
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
-      alert("Connexion réussie 🎉");
-      if(role === "ADMIN") {
-        navigate("/admin");
-      }else if (role == "ORGANIZER"){
-        navigate("/creer-event");
-      }else{
-         navigate("/");
 
-      }
-     
-    }catch (err) {
-      alert(err.response?.data || "Erreur lors de la connexion");
-    }finally {
-      setLoading(false)
-    }
-  };
+const { login, loading } = useAuth();
 
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    await login(form);
+  } catch (err) {
+    alert(err.response?.data || "Erreur connexion");
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4

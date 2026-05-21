@@ -1,6 +1,6 @@
 import { Calendar, MapPin, Ticket, ArrowRight } from "lucide-react";
-import Guide from "./Guide";
-import Footer from "../footer/Footer";
+import Guide from "../../features/guide/Guide";
+
 
 export default function Home() {
   const events = [
@@ -140,7 +140,7 @@ export default function Home() {
         </div>
       </section>
        <Guide />
-        <Footer />
+  
     </div>
   );
 }

@@ -1,8 +1,7 @@
+import { useAuth } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { Mail, Lock, Phone, Calendar } from "lucide-react";
 import { useState } from "react";
-import { registerUser } from "../../api/auth";
-import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 export default function Register() {
   const [form, setForm] = useState({
@@ -14,42 +13,23 @@ export default function Register() {
     confirmPassword: "",
     role: "USER",
   });
-  const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false);
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const { register, loading } = useAuth();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (form.password !== form.confirmPassword) {
-      alert("Les mots de passe ne correspondent pas ❌");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      // on enlève confirmPassword avant envoi backend
-      const { confirmPassword, ...dataToSend } = form;
-
-      const res = await registerUser(dataToSend);
-
-      console.log("User créé :", res.data);
-      alert("Inscription réussie 🎉");
-      navigate("/login");
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data || "Erreur lors de l'inscription");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    await register(form);
+  } catch (err) {
+    alert(err.message || "Erreur inscription");
+  }
+};
 
   return (
     <div
