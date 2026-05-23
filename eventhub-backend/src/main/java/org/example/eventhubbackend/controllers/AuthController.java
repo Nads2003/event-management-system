@@ -1,5 +1,6 @@
 package org.example.eventhubbackend.controllers;
 import lombok.RequiredArgsConstructor;
+import org.example.eventhubbackend.dto.AuthResponse;
 import org.example.eventhubbackend.entity.User;
 import org.example.eventhubbackend.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -34,17 +35,21 @@ public class AuthController {
     //se connecter
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
+
         try {
-            User existing = userService.findByEmail(user.getEmail());
-            String token = userService.loginUser(
+
+            AuthResponse response = userService.loginUser(
                     user.getEmail(),
-                    user.getPassword());
-            return ResponseEntity.ok(Map.of(
-                    "toke",token,
-                    "role",existing.getRole().name()
-            ));
+                    user.getPassword()
+            );
+
+            return ResponseEntity.ok(response);
+
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
         }
     }
 }

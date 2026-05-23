@@ -3,6 +3,7 @@ import { Menu, X, Calendar, Bell, Plus, ChevronDown, Sun, Moon } from "lucide-re
 import MobileMenu from "./MobileMenu";
 import { NAV_ITEMS } from "./navbar.data";
 import { useNavbar } from "./navbar.hooks";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const {
@@ -13,7 +14,26 @@ export default function Navbar() {
     darkMode,
     toggleTheme,
   } = useNavbar();
+const navigate = useNavigate();
+const handleCreateEvent = () => {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
 
+  // pas connecté
+  if (!token) {
+    navigate("/login");
+    return;
+  }
+
+  // connecté mais pas organizer
+  if (role !== "ORGANIZER") {
+    alert("Vous devez être organisateur");
+    return;
+  }
+
+  // organizer connecté
+  navigate("/creer-event");
+};
   return (
     <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b shadow-lg">
 
@@ -104,12 +124,13 @@ export default function Navbar() {
             <Bell />
           </Link>
 
-          <Link
-            to="/creer-event"
-            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-xl"
+          <button
+           onClick={handleCreateEvent}
+          className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-xl"
           >
-            <Plus size={16} /> Créer
-          </Link>
+            <Plus size={16} />
+              Créer
+          </button>
         </div>
 
         {/* MOBILE BUTTON */}

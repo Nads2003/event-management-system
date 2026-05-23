@@ -8,63 +8,144 @@ import org.example.eventhubbackend.repository.EventRepository;
 import org.example.eventhubbackend.repository.ReservationRepository;
 import org.example.eventhubbackend.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 @Service
 @RequiredArgsConstructor
 public class EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
+// insertion d'un evenement
+public Event createEvent(
+        String title,
+        String description,
+        String location,
+        Integer capacity,
+        Long organizerId,
+        String address,
+        String city,
+        EventCategory category,
+        String startDate,
+        String endDate,
+        List<MultipartFile> files,
+        List<MediaType> types
+) {
 
-    public Event createEvent(EventRequest request) {
+    User organizer = userRepository.findById(organizerId)
+            .orElseThrow(() -> new RuntimeException("Organisateur introuvable"));
 
-        User organizer = userRepository.findById(request.getOrganizerId())
-                .orElseThrow(() -> new RuntimeException("Organisateur introuvable"));
+    Event event = Event.builder()
+            .title(title)
+            .description(description)
+            .location(location)
+            .capacity(capacity)
+            .address(address)
+            .city(city)
+            .category(category)
+            .organizer(organizer)
+            .build();
 
-        Event event = Event.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .startDate(request.getStartDate())
-                .endDate(request.getEndDate())
-                .location(request.getLocation())
-                .address(request.getAddress())
-                .city(request.getCity())
-                .capacity(request.getCapacity())
-                .category(request.getCategory())
-                .organizer(organizer)
-                .build();
+    List<EventMedia> medias = new ArrayList<>();
 
-        List<EventMedia> medias = request.getMedia().stream()
-                .map(m -> EventMedia.builder()
-                        .url(m.getUrl())
-                        .type(m.getType())
-                        .event(event)
-                        .build())
-                .toList();
+    if (files != null && !files.isEmpty()) {
 
-        event.setMedia(medias);
+        for (int i = 0; i < files.size(); i++) {
 
-        return eventRepository.save(event);
+            MultipartFile file = files.get(i);
+
+            String filename =
+                    System.currentTimeMillis()
+                            + "_" +
+                            file.getOriginalFilename();
+
+            Path path = Paths.get("uploads/" + filename);
+
+            try {
+
+                Files.createDirectories(path.getParent());
+
+                Files.write(path, file.getBytes());
+
+            } catch (Exception e) {
+                throw new RuntimeException("Erreur upload fichier");
+            }
+
+            EventMedia media = EventMedia.builder()
+                    .url("/uploads/" + filename)
+                    .type(types.get(i))
+                    .event(event)
+                    .build();
+
+            medias.add(media);
+        }
     }
+
+    event.setMedia(medias);
+
+    return eventRepository.save(event);
+}
+    //liste de evenement
     public List<Event> getAllEvents() {
         return eventRepository.findAllwithMediaAndOrganizer();
     }
+    //evenement d'un organisateur
     public List<Event> getEventByOrganizer(Long organizer) {
         return eventRepository.findByOrganizerId(organizer);
     }
+    //suppression d'un evenement
+//suppression d'un evenement
     public void deleteEvent(Long id) {
-       List<Reservation> pendingReservation =
-               reservationRepository.findByEventIdAndStatus(id, ReservationStatus.PENDING);
-       if (pendingReservation.isEmpty()) {
-           throw new RuntimeException
-                   ("Impossible de supprimer: des reservations encours existent");
 
-       }
-       eventRepository.deleteById(id);
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Evenement introuvable"));
 
+        List<Reservation> pendingReservation =
+                reservationRepository.findByEventIdAndStatus(
+                        id,
+                        ReservationStatus.PENDING
+                );
+
+        // ✅ BLOQUER seulement si reservation existe
+        if (!pendingReservation.isEmpty()) {
+
+            throw new RuntimeException(
+                    "Impossible de supprimer : des réservations existent"
+            );
+        }
+
+        // ✅ supprimer medias physiques
+        if (event.getMedia() != null) {
+
+            for (EventMedia media : event.getMedia()) {
+
+                try {
+
+                    String filename =
+                            media.getUrl()
+                                    .replace("http://localhost:8080/uploads/", "");
+
+                    Path path = Paths.get("uploads/" + filename);
+
+                    Files.deleteIfExists(path);
+
+                } catch (Exception e) {
+
+                    System.out.println("Erreur suppression fichier");
+                }
+            }
+        }
+
+        // ✅ suppression event + medias DB
+        eventRepository.delete(event);
     }
+    // modification d'un evenement
     public Event updateEvent(Long id, EventUpdateRequest request,Long organizer) {
         Event event=eventRepository.findById(id).
                 orElseThrow(() -> new RuntimeException("Evenement introuvable"));

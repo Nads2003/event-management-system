@@ -10,22 +10,23 @@ export function useAuth() {
   const [user, setUser] = useState(getAuth());
 
   // 🔐 LOGIN
-  const login = async (form) => {
-    setLoading(true);
+ const login = async (form) => {
+  setLoading(true);
 
-    try {
-      const { data } = await loginUser(form);
-      const { token, role } = data;
+  try {
+    const { data } = await loginUser(form);
 
-      saveAuth(token, role);
-      setUser({ token, role });
+    const { token, role, id } = data;
 
-      redirectByRole(role);
+    saveAuth(token, role, id); // 🔥 IMPORTANT
+    setUser({ token, role, id });
 
-    } finally {
-      setLoading(false);
-    }
-  };
+    redirectByRole(role);
+
+  } finally {
+    setLoading(false);
+  }
+};
 
   // 📝 REGISTER
   const register = async (form) => {
