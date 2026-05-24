@@ -1,16 +1,25 @@
 import { useState } from "react";
 import { useOrganizerEvents } from "../hooks/useOrganizerEvents";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 export default function EventOrganizer() {
   const { events, addEvent, removeEvent } = useOrganizerEvents();
 
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    location: "",
-    capacity: "",
-    media: [],
-  });
+const [form, setForm] = useState({
+  title: "",
+  description: "",
+  location: "",
+  address: "",
+  city: "",
+  category: "CONCERT",
+  capacity: "",
+  media: [],
+});
 
   // ✅ MEDIA devient FILE
   const [media, setMedia] = useState({
@@ -46,6 +55,9 @@ const handleSubmit = async (e) => {
     formData.append("title", form.title);
     formData.append("description", form.description);
     formData.append("location", form.location);
+    formData.append("address", form.address);
+    formData.append("city", form.city);
+    formData.append("category", form.category);
     formData.append("capacity", form.capacity);
 
     form.media.forEach((m) => {
@@ -55,13 +67,16 @@ const handleSubmit = async (e) => {
 
     await addEvent(formData);
 
-    setForm({
-      title: "",
-      description: "",
-      location: "",
-      capacity: "",
-      media: [],
-    });
+   setForm({
+  title: "",
+  description: "",
+  location: "",
+  address: "",
+  city: "",
+  category: "CONCERT",
+  capacity: "",
+  media: [],
+});
 
   } catch (error) {
     console.log(error);
@@ -92,7 +107,40 @@ const handleSubmit = async (e) => {
       onChange={handleChange}
       className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
     />
+<input
+  name="address"
+  placeholder="Adresse"
+  value={form.address}
+  onChange={handleChange}
+  required
+  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+/>
 
+<input
+  name="city"
+  placeholder="Ville"
+  value={form.city}
+  onChange={handleChange}
+  required
+  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+/>
+
+<select
+  name="category"
+  value={form.category}
+  onChange={handleChange}
+  required
+  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+>
+  <option value="CONCERT">Concert</option>
+  <option value="SPORT">Sport</option>
+  <option value="CONFERENCE">Conférence</option>
+  <option value="FORMATION">Formation</option>
+  <option value="CULTURE">Culture</option>
+  <option value="FESTIVAL">Festival</option>
+  <option value="GAMING">Gaming</option>
+  <option value="AUTRES">Autres</option>
+</select>
     <input
       name="location"
       placeholder="Lieu"
@@ -109,13 +157,15 @@ const handleSubmit = async (e) => {
       className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
     />
 
-    <input
-      name="description"
-      placeholder="Description"
-      value={form.description}
-      onChange={handleChange}
-      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-    />
+   <textarea
+  name="description"
+  placeholder="Description de l'événement..."
+  value={form.description}
+  onChange={handleChange}
+  required
+  rows={5}
+  className="w-full px-4 py-3 border rounded-xl resize-none focus:ring-2 focus:ring-indigo-500 outline-none"
+></textarea>
   </div>
 
   {/* MEDIA BOX */}
@@ -235,31 +285,40 @@ const handleSubmit = async (e) => {
       className="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition duration-300"
     >
       {/* MEDIA */}
-      {ev.media?.length > 0 ? (
-        <div className="grid grid-cols-2 gap-1 bg-gray-100">
-          {ev.media.slice(0, 4).map((m, i) =>
-            m.type === "IMAGE" ? (
-              <img
-                key={i}
-                src={m.url}
-                alt=""
-                className="h-44 w-full object-cover hover:scale-105 transition duration-300"
-              />
-            ) : (
-              <video
-                key={i}
-                src={m.url}
-                className="h-44 w-full object-cover"
-                controls
-              />
-            )
-          )}
-        </div>
-      ) : (
-        <div className="h-44 bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xl font-bold">
-          Aucun média
-        </div>
-      )}
+      {/* MEDIA CAROUSEL */}
+{ev.media?.length > 0 ? (
+  <Swiper
+    modules={[Navigation, Pagination, Autoplay]}
+    navigation
+    pagination={{ clickable: true }}
+    autoplay={{ delay: 3000 }}
+    spaceBetween={0}
+    slidesPerView={1}
+    className="h-64"
+  >
+    {ev.media.map((m, i) => (
+      <SwiperSlide key={i}>
+        {m.type === "IMAGE" ? (
+          <img
+            src={`http://localhost:8080${m.url}`}
+            alt=""
+            className="h-64 w-full object-cover"
+          />
+        ) : (
+          <video
+            src={`http://localhost:8080${m.url}`}
+            className="h-64 w-full object-cover"
+            controls
+          />
+        )}
+      </SwiperSlide>
+    ))}
+  </Swiper>
+) : (
+  <div className="h-44 bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xl font-bold">
+    Aucun média
+  </div>
+)}
 
       {/* CONTENT */}
       <div className="p-5">
@@ -272,6 +331,17 @@ const handleSubmit = async (e) => {
             <p className="text-sm text-gray-500 mt-1">
               📍 {ev.location}
             </p>
+            <p className="text-sm text-gray-500">
+  🏙️ {ev.city}
+</p>
+
+<p className="text-sm text-gray-500">
+  🛣️ {ev.address}
+</p>
+
+<span className="inline-block mt-2 bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full">
+  {ev.category}
+</span>
           </div>
 
           <span className="bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full">

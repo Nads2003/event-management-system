@@ -141,7 +141,6 @@ public Event createEvent(
                 }
             }
         }
-
         // ✅ suppression event + medias DB
         eventRepository.delete(event);
     }
