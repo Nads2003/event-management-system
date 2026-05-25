@@ -1,65 +1,16 @@
 import { Calendar, MapPin, Ticket, ArrowRight } from "lucide-react";
 import Guide from "../../features/guide/Guide";
+import{useEvents} from "../../features/events/hooks/Event";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 
 export default function Home() {
-  const events = [
-    {
-      id: 1,
-      title: "Festival Digital 2026",
-      date: "12 Juin 2026",
-      location: "Antananarivo",
-      price: "50 000 Ar",
-      image:
-        "https://images.unsplash.com/photo-1511578314322-379afb476865",
-    },
-    {
-      id: 2,
-      title: "Conférence Tech IA",
-      date: "18 Juin 2026",
-      location: "Ivandry",
-      price: "80 000 Ar",
-      image:
-        "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
-    },
-    {
-      id: 3,
-      title: "Concert Summer Vibes",
-      date: "25 Juin 2026",
-      location: "Mahamasina",
-      price: "35 000 Ar",
-      image:
-        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a",
-    },
-    {
-      id: 4,
-      title: "Startup Expo",
-      date: "30 Juin 2026",
-      location: "Ankorondrano",
-      price: "Gratuit",
-      image:
-        "https://images.unsplash.com/photo-1515169067868-5387ec356754",
-    },
-    {
-      id: 5,
-      title: "Forum Business",
-      date: "05 Juillet 2026",
-      location: "Analakely",
-      price: "65 000 Ar",
-      image:
-        "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
-    },
-    {
-      id: 6,
-      title: "Soirée Networking",
-      date: "12 Juillet 2026",
-      location: "Ambatobe",
-      price: "40 000 Ar",
-      image:
-        "https://images.unsplash.com/photo-1517457373958-b7bdd4587205",
-    },
-  ];
-
+  const { events } = useEvents();
   return (
     <div className="min-h-screen pt-28 px-6 lg:px-16
       bg-gradient-to-br from-indigo-50 via-white to-purple-100
@@ -90,11 +41,41 @@ export default function Home() {
             >
               {/* Image */}
               <div className="relative overflow-hidden">
-                <img
-                  src={event.image}
-                  alt={event.title}
-                  className="w-full h-56 object-cover group-hover:scale-110 transition duration-500"
-                />
+                {/* MEDIA CAROUSEL */}
+{event.media?.length > 0 ? (
+  <Swiper
+    modules={[Navigation, Pagination, Autoplay]}
+    navigation
+    pagination={{ clickable: true }}
+    autoplay={{ delay: 3000 }}
+    spaceBetween={0}
+    slidesPerView={1}
+    className="h-64"
+  >
+    {event.media.map((m, i) => (
+      <SwiperSlide key={i}>
+        {m.type === "IMAGE" ? (
+          <img
+            src={`http://localhost:8080${m.url}`}
+            alt=""
+            className="h-64 w-full object-cover"
+          />
+        ) : (
+          <video
+            src={`http://localhost:8080${m.url}`}
+            className="h-64 w-full object-cover"
+            controls
+          />
+        )}
+      </SwiperSlide>
+    ))}
+  </Swiper>
+) : (
+  <div className="h-44 bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xl font-bold">
+    Aucun média
+  </div>
+)}
+
 
                 <span className="absolute top-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-medium">
                   {event.price}
