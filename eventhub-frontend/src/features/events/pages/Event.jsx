@@ -1,41 +1,9 @@
 import { useState } from "react";
 import { Calendar, MapPin, Ticket, Search } from "lucide-react";
+import{useEvents} from "../hooks/Event";
 export default function Events() {
+  const { events } = useEvents();
   const [search, setSearch] = useState("");
-
-  const events = [
-    {
-      id: 1,
-      title: "Festival Digital 2026",
-      date: "12 Juin 2026",
-      location: "Antananarivo",
-      category: "Festival",
-      price: "50 000 Ar",
-      image:
-        "https://images.unsplash.com/photo-1511578314322-379afb476865",
-    },
-    {
-      id: 2,
-      title: "Conférence Tech IA",
-      date: "18 Juin 2026",
-      location: "Ivandry",
-      category: "Tech",
-      price: "80 000 Ar",
-      image:
-        "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
-    },
-    {
-      id: 3,
-      title: "Concert Summer Vibes",
-      date: "25 Juin 2026",
-      location: "Mahamasina",
-      category: "Concert",
-      price: "35 000 Ar",
-      image:
-        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a",
-    },
-  ];
-
   const filtered = events.filter((e) =>
     e.title.toLowerCase().includes(search.toLowerCase())
   );
