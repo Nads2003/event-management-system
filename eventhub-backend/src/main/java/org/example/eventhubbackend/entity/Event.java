@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,6 +35,9 @@ public class Event {
     private Integer capacity;
     @Enumerated(EnumType.STRING)
     private EventCategory category;
+    @Enumerated(EnumType.STRING)
+    private EventType type;
+    private BigDecimal price;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp

@@ -17,6 +17,8 @@ const [form, setForm] = useState({
   address: "",
   city: "",
   category: "CONCERT",
+  eventype:"GRATUIT",
+  price: "",
   capacity: "",
   media: [],
 });
@@ -59,7 +61,8 @@ const handleSubmit = async (e) => {
     formData.append("city", form.city);
     formData.append("category", form.category);
     formData.append("capacity", form.capacity);
-
+    formData.append("eventype", form.eventype);
+    formData.append("price", form.price);
     form.media.forEach((m) => {
       formData.append("files", m.file);
       formData.append("types", m.type);
@@ -99,7 +102,7 @@ const handleSubmit = async (e) => {
   </h2>
 
   {/* GRID INPUTS */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
     <input
       name="title"
       placeholder="Titre de l'événement"
@@ -107,6 +110,40 @@ const handleSubmit = async (e) => {
       onChange={handleChange}
       className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
     />
+    <select
+  name="category"
+  value={form.category}
+  onChange={handleChange}
+  required
+  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+>
+  <option value="CONCERT">Concert</option>
+  <option value="SPORT">Sport</option>
+  <option value="CONFERENCE">Conférence</option>
+  <option value="FORMATION">Formation</option>
+  <option value="CULTURE">Culture</option>
+  <option value="FESTIVAL">Festival</option>
+  <option value="GAMING">Gaming</option>
+  <option value="AUTRES">Autres</option>
+</select>
+<select
+  name="eventype"
+  value={form.eventype}
+  onChange={handleChange}
+  required
+  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+>
+  <option value="CONCERT">GRATUIT</option>
+  <option value="SPORT">PAYANT</option>
+ 
+</select>
+<input
+  name="price"
+  placeholder="Prix (laisser vide si gratuit)"
+  value={form.price}
+  onChange={handleChange}
+  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+/>
 <input
   name="address"
   placeholder="Adresse"
@@ -123,24 +160,7 @@ const handleSubmit = async (e) => {
   onChange={handleChange}
   required
   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-/>
-
-<select
-  name="category"
-  value={form.category}
-  onChange={handleChange}
-  required
-  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
->
-  <option value="CONCERT">Concert</option>
-  <option value="SPORT">Sport</option>
-  <option value="CONFERENCE">Conférence</option>
-  <option value="FORMATION">Formation</option>
-  <option value="CULTURE">Culture</option>
-  <option value="FESTIVAL">Festival</option>
-  <option value="GAMING">Gaming</option>
-  <option value="AUTRES">Autres</option>
-</select>
+  />
     <input
       name="location"
       placeholder="Lieu"
@@ -157,14 +177,14 @@ const handleSubmit = async (e) => {
       className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
     />
 
-   <textarea
+<textarea
   name="description"
   placeholder="Description de l'événement..."
   value={form.description}
   onChange={handleChange}
   required
   rows={5}
-  className="w-full px-4 py-3 border rounded-xl resize-none focus:ring-2 focus:ring-indigo-500 outline-none"
+  className="md:col-span-3 w-full px-4 py-3 border rounded-xl resize-none focus:ring-2 focus:ring-indigo-500 outline-none"
 ></textarea>
   </div>
 
@@ -284,7 +304,8 @@ const handleSubmit = async (e) => {
       key={ev.id}
       className="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition duration-300"
     >
-      {/* MEDIA */}
+      <div className="relative overflow-hidden">
+        
       {/* MEDIA CAROUSEL */}
 {ev.media?.length > 0 ? (
   <Swiper
@@ -318,7 +339,21 @@ const handleSubmit = async (e) => {
   <div className="h-44 bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xl font-bold">
     Aucun média
   </div>
+  
 )}
+  <span
+    className={`absolute top-4 right-4 px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-20
+    ${
+      ev.type === "GRATUIT"
+        ? "bg-green-500 text-white"
+        : "bg-yellow-400 text-black"
+    }`}
+  >
+    {ev.type === "GRATUIT"
+      ? "🎉 Gratuit"
+      : `💰 ${ev.price.toLocaleString("fr-FR")} Ar`}
+  </span>
+  </div>
 
       {/* CONTENT */}
       <div className="p-5">
@@ -327,7 +362,7 @@ const handleSubmit = async (e) => {
             <h2 className="text-xl font-bold text-gray-800">
               {ev.title}
             </h2>
-
+                        
             <p className="text-sm text-gray-500 mt-1">
               📍 {ev.location}
             </p>

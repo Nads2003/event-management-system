@@ -1,15 +1,16 @@
 package org.example.eventhubbackend.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.example.eventhubbackend.dto.EventRequest;
 import org.example.eventhubbackend.dto.EventUpdateRequest;
 import org.example.eventhubbackend.entity.Event;
+import org.example.eventhubbackend.entity.EventType;
 import org.example.eventhubbackend.services.EventService;
 import org.springframework.http.ResponseEntity;
 import org.example.eventhubbackend.entity.EventCategory;
 import org.example.eventhubbackend.entity.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,8 @@ public class EventController {
             @RequestParam(required = false) String city,
 
             @RequestParam(required = false) EventCategory category,
+            @RequestParam(required = false) EventType eventType,
+            @RequestParam(required = false) BigDecimal price,
 
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
@@ -54,6 +57,8 @@ public class EventController {
                         address,
                         city,
                         category,
+                        eventType,
+                        price,
                         startDate,
                         endDate,
                         files,
