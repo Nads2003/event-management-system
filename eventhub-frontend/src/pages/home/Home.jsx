@@ -11,6 +11,7 @@ import "swiper/css/pagination";
 
 export default function Home() {
   const { events } = useEvents();
+  console.log(events);
   return (
     <div className="min-h-screen pt-28 px-6 lg:px-16
       bg-gradient-to-br from-indigo-50 via-white to-purple-100
@@ -40,47 +41,57 @@ export default function Home() {
               hover:-translate-y-2 border border-white/50 dark:border-gray-700"
             >
               {/* Image */}
-              <div className="relative overflow-hidden">
-                {/* MEDIA CAROUSEL */}
-{event.media?.length > 0 ? (
-  <Swiper
-    modules={[Navigation, Pagination, Autoplay]}
-    navigation
-    pagination={{ clickable: true }}
-    autoplay={{ delay: 3000 }}
-    spaceBetween={0}
-    slidesPerView={1}
-    className="h-64"
+<div className="relative overflow-hidden">
+
+  {event.media?.length > 0 ? (
+    <Swiper
+      modules={[Navigation, Pagination, Autoplay]}
+      navigation
+      pagination={{ clickable: true }}
+      autoplay={{ delay: 3000 }}
+      spaceBetween={0}
+      slidesPerView={1}
+      className="h-64"
+    >
+      {event.media.map((m, i) => (
+        <SwiperSlide key={i}>
+          {m.type === "IMAGE" ? (
+            <img
+              src={`http://localhost:8080${m.url}`}
+              alt=""
+              className="h-64 w-full object-cover"
+            />
+          ) : (
+            <video
+              src={`http://localhost:8080${m.url}`}
+              className="h-64 w-full object-cover"
+              controls
+            />
+          )}
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  ) : (
+    <div className="h-44 bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xl font-bold">
+      Aucun média
+    </div>
+  )}
+
+  {/* BADGE */}
+  <span
+    className={`absolute top-4 right-4 px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-20
+    ${
+      event.type === "GRATUIT"
+        ? "bg-green-500 text-white"
+        : "bg-yellow-400 text-black"
+    }`}
   >
-    {event.media.map((m, i) => (
-      <SwiperSlide key={i}>
-        {m.type === "IMAGE" ? (
-          <img
-            src={`http://localhost:8080${m.url}`}
-            alt=""
-            className="h-64 w-full object-cover"
-          />
-        ) : (
-          <video
-            src={`http://localhost:8080${m.url}`}
-            className="h-64 w-full object-cover"
-            controls
-          />
-        )}
-      </SwiperSlide>
-    ))}
-  </Swiper>
-) : (
-  <div className="h-44 bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xl font-bold">
-    Aucun média
-  </div>
-)}
+    {event.type === "GRATUIT"
+      ? "🎉 Gratuit"
+      : `💰 ${event.price} Ar`}
+  </span>
 
-
-                <span className="absolute top-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-medium">
-                  {event.price}
-                </span>
-              </div>
+</div>
 
               {/* Content */}
               <div className="p-6">
@@ -91,13 +102,26 @@ export default function Home() {
                 <div className="space-y-3 text-gray-600 dark:text-gray-300">
 
                   <div className="flex items-center gap-2">
-                    <Calendar size={18} />
-                    <span>{event.date}</span>
+                   
+                    <span>{event.description}</span>
+                    
                   </div>
 
                   <div className="flex items-center gap-2">
                     <MapPin size={18} />
                     <span>{event.location}</span>
+                                   <span
+  className={`absolute top-4 right-4 px-4 py-2 rounded-full text-sm font-semibold shadow-lg
+  ${
+    event.type === "GRATUIT"
+      ? "bg-green-500 text-white"
+      : "bg-indigo-600 text-white"
+  }`}
+>
+  {event.type === "GRATUIT"
+    ? "Gratuit"
+    : `${event.price} Ar`}
+</span>
                   </div>
 
                   <div className="flex items-center gap-2">

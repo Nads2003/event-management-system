@@ -1,7 +1,6 @@
 package org.example.eventhubbackend.services;
 
 import lombok.RequiredArgsConstructor;
-import org.example.eventhubbackend.dto.EventRequest;
 import org.example.eventhubbackend.dto.EventUpdateRequest;
 import org.example.eventhubbackend.entity.*;
 import org.example.eventhubbackend.repository.EventRepository;
@@ -10,6 +9,7 @@ import org.example.eventhubbackend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.nio.file.Files;
@@ -31,6 +31,8 @@ public Event createEvent(
         String address,
         String city,
         EventCategory category,
+        EventType eventType,
+        BigDecimal price,
         String startDate,
         String endDate,
         List<MultipartFile> files,
@@ -48,6 +50,8 @@ public Event createEvent(
             .address(address)
             .city(city)
             .category(category)
+            .type(eventType)
+            .price(price)
             .organizer(organizer)
             .build();
 
