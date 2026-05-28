@@ -1,15 +1,20 @@
+//pour les icones
 import { Calendar, MapPin, Ticket, ArrowRight } from "lucide-react";
+//composant guide et hooks events
 import Guide from "../../features/guide/Guide";
 import{useEvents} from "../../features/events/hooks/Event";
+//pour le carousel
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
-
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 
 export default function Home() {
+  // ✅ state global des events
+  const { events } = useEvents();
+  //fonction pour formater la date en français
   const formatEventDate = (date) => {
   const d = new Date(date);
 
@@ -24,8 +29,7 @@ export default function Home() {
 
   return `${datePart} à ${hours}H${minutes}`;
 };
-  const { events } = useEvents();
-  console.log(events);
+
   return (
     <div className="min-h-screen pt-28 px-6 lg:px-16
       bg-gradient-to-br from-indigo-50 via-white to-purple-100

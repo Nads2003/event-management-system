@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { useOrganizerEvents } from "../hooks/useOrganizerEvents";
+//pour le carousel
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
-
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 export default function EventOrganizer() {
-  const { events, addEvent, removeEvent } = useOrganizerEvents();
+  // ✅ state global des events
+const { events, addEvent, removeEvent } = useOrganizerEvents();
 const now = new Date().toISOString().slice(0, 16);
+// ✅ state local du formulaire
 const [form, setForm] = useState({
   title: "",
   description: "",
@@ -29,7 +31,7 @@ const [form, setForm] = useState({
     file: null,
     type: "IMAGE",
   });
-
+//fonction générique pour tous les inputs
 const handleChange = (e) => {
   const { name, value } = e.target;
 
@@ -55,6 +57,7 @@ const handleChange = (e) => {
     return updated;
   });
 };
+// ✅ format date FR
 const formatEventDate = (date) => {
   return new Date(date).toLocaleString("fr-FR", {
     day: "2-digit",
