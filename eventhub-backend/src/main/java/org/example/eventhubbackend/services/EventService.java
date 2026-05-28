@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.nio.file.Files;
@@ -25,7 +26,6 @@ public class EventService {
 public Event createEvent(
         String title,
         String description,
-        String location,
         Integer capacity,
         Long organizerId,
         String address,
@@ -33,8 +33,8 @@ public Event createEvent(
         EventCategory category,
         EventType eventType,
         BigDecimal price,
-        String startDate,
-        String endDate,
+        LocalDateTime startDate,
+        LocalDateTime endDate,
         List<MultipartFile> files,
         List<MediaType> types
 ) {
@@ -45,13 +45,14 @@ public Event createEvent(
     Event event = Event.builder()
             .title(title)
             .description(description)
-            .location(location)
             .capacity(capacity)
             .address(address)
             .city(city)
             .category(category)
             .type(eventType)
             .price(price)
+            .startDate(startDate)
+            .endDate(endDate)
             .organizer(organizer)
             .build();
 
