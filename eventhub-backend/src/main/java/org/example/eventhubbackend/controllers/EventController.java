@@ -11,10 +11,11 @@ import org.example.eventhubbackend.entity.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/events")
@@ -27,7 +28,7 @@ public class EventController {
     public ResponseEntity<?> createEvent(
             @RequestParam String title,
             @RequestParam String description,
-            @RequestParam String location,
+
             @RequestParam Integer capacity,
             @RequestParam Long organizerId,
 
@@ -38,8 +39,8 @@ public class EventController {
             @RequestParam(required = false) EventType eventType,
             @RequestParam(required = false) BigDecimal price,
 
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate,
 
             @RequestParam(value = "files", required = false)
             List<MultipartFile> files,
@@ -51,7 +52,6 @@ public class EventController {
                 eventService.createEvent(
                         title,
                         description,
-                        location,
                         capacity,
                         organizerId,
                         address,

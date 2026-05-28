@@ -10,6 +10,20 @@ import "swiper/css/pagination";
 
 
 export default function Home() {
+  const formatEventDate = (date) => {
+  const d = new Date(date);
+
+  const datePart = d.toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+
+  return `${datePart} à ${hours}H${minutes}`;
+};
   const { events } = useEvents();
   console.log(events);
   return (
@@ -94,52 +108,125 @@ export default function Home() {
 </div>
 
               {/* Content */}
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
-                  {event.title}
-                </h3>
+{/* Content */}
+<div className="p-6 flex flex-col h-full">
 
-                <div className="space-y-3 text-gray-600 dark:text-gray-300">
+  {/* CATEGORY + PRICE */}
+  <div className="flex items-center justify-between mb-4">
+    <span className="px-3 py-1 rounded-full text-xs font-semibold
+    bg-indigo-100 text-indigo-700
+    dark:bg-indigo-900/40 dark:text-indigo-300">
+      {event.category}
+    </span>
 
-                  <div className="flex items-center gap-2">
-                   
-                    <span>{event.description}</span>
-                    
-                  </div>
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-bold
+      ${
+        event.type === "GRATUIT"
+          ? "bg-green-500 text-white"
+          : "bg-yellow-400 text-black"
+      }`}
+    >
+      {event.type === "GRATUIT"
+        ? "🎉 Gratuit"
+        : `💰 ${event.price} Ar`}
+    </span>
+  </div>
 
-                  <div className="flex items-center gap-2">
-                    <MapPin size={18} />
-                    <span>{event.location}</span>
-                                   <span
-  className={`absolute top-4 right-4 px-4 py-2 rounded-full text-sm font-semibold shadow-lg
-  ${
-    event.type === "GRATUIT"
-      ? "bg-green-500 text-white"
-      : "bg-indigo-600 text-white"
-  }`}
->
-  {event.type === "GRATUIT"
-    ? "Gratuit"
-    : `${event.price} Ar`}
-</span>
-                  </div>
+  {/* TITLE */}
+  <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-3 line-clamp-2">
+    {event.title}
+  </h3>
 
-                  <div className="flex items-center gap-2">
-                    <Ticket size={18} />
-                    <span>Places disponibles</span>
-                  </div>
-                </div>
+  {/* DESCRIPTION */}
+  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3 mb-5">
+    {event.description}
+  </p>
 
-                <button
-                  className="w-full mt-6 flex items-center justify-center gap-2
-                  py-4 bg-gradient-to-r from-indigo-600 to-purple-600
-                  text-white rounded-2xl font-semibold
-                  hover:scale-[1.02] transition"
-                >
-                  Réserver
-                  <ArrowRight size={18} />
-                </button>
-              </div>
+  {/* INFOS */}
+  <div className="space-y-4">
+
+    {/* DATE */}
+    <div className="flex items-start gap-3">
+      <div className="p-2 rounded-xl bg-indigo-100 dark:bg-indigo-900/40">
+        <Calendar
+          size={18}
+          className="text-indigo-600 dark:text-indigo-300"
+        />
+      </div>
+
+      <div>
+        <p className="text-sm font-semibold text-gray-800 dark:text-white">
+          Date
+        </p>
+
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          {formatEventDate(event.startDate)}
+        </p>
+
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          au {formatEventDate(event.endDate)}
+        </p>
+      </div>
+    </div>
+
+    {/* LOCATION */}
+    <div className="flex items-start gap-3">
+      <div className="p-2 rounded-xl bg-purple-100 dark:bg-purple-900/40">
+        <MapPin
+          size={18}
+          className="text-purple-600 dark:text-purple-300"
+        />
+      </div>
+
+      <div>
+        <p className="text-sm font-semibold text-gray-800 dark:text-white">
+          Lieu
+        </p>
+
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          {event.city}
+        </p>
+
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          {event.address}
+        </p>
+      </div>
+    </div>
+
+    {/* CAPACITY */}
+    <div className="flex items-start gap-3">
+      <div className="p-2 rounded-xl bg-pink-100 dark:bg-pink-900/40">
+        <Ticket
+          size={18}
+          className="text-pink-600 dark:text-pink-300"
+        />
+      </div>
+
+      <div>
+        <p className="text-sm font-semibold text-gray-800 dark:text-white">
+          Places disponibles
+        </p>
+
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          {event.capacity} places
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {/* BUTTON */}
+  <button
+    className="w-full mt-7 flex items-center justify-center gap-2
+    py-4 rounded-2xl font-semibold text-white
+    bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600
+    hover:scale-[1.02] hover:shadow-xl
+    transition-all duration-300"
+  >
+    Réserver
+    <ArrowRight size={18} />
+  </button>
+</div>
             </div>
           ))}
         </div>
