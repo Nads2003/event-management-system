@@ -1,7 +1,11 @@
 import { useState } from "react";
+//pour les icones
 import { Calendar, MapPin, Ticket, Search } from "lucide-react";
+//composant hooks events
 import{useEvents} from "../hooks/Event";
+
 export default function Events() {
+  // ✅ state global des events
   const { events } = useEvents();
   const [search, setSearch] = useState("");
   const filtered = events.filter((e) =>
