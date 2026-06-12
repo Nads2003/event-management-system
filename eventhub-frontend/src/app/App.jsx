@@ -5,6 +5,7 @@ import OrganizerEvents from "../features/organizer/pages/EventOrganizer";
 import Login from "../features/auth/pages/Login";
 import Register from "../features/auth/pages/Register";
 import Events from "../features/events/pages/Event";
+import EventDetail from "../features/events/pages/EventDetail";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
   path="/creer-event"
   element={<OrganizerEvents />}
 />
+        <Route path="/events/:id" element={<EventDetail />} />
       </Route>
 
     </Routes>
