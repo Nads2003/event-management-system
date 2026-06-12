@@ -3,7 +3,7 @@ import { FaGlobe, FaGithub, FaTwitter, FaEnvelope, FaPhone, FaMapMarkerAlt } fro
 
 export default function Footer() {
   return (
-    <footer className="mt-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-t border-gray-200 dark:border-gray-700">
+    <footer className="mt-0 bg-white/80 dark:bg-gray-900  dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950 backdrop-blur-xl border-t border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-6 lg:px-16 py-16">
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">

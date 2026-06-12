@@ -53,4 +53,4 @@ const addEvent = async (formData) => {
     editEvent,
     loading,
   };
-}
+} 

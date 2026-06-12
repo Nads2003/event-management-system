@@ -3,12 +3,15 @@ import { Calendar, MapPin, Ticket, ArrowRight } from "lucide-react";
 //composant guide et hooks events
 import Guide from "../../features/guide/Guide";
 import{useEvents} from "../../features/events/hooks/Event";
+import Hero from "../hero/Hero";
 //pour le carousel
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+//
+import { Link } from "react-router-dom";
 
 
 export default function Home() {
@@ -36,16 +39,22 @@ export default function Home() {
       dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950">
 
       {/* Hero */}
-      <section className="text-center mb-16">
-        <h1 className="text-5xl font-bold text-gray-800 dark:text-white mb-4">
-          Découvrez les meilleurs événements
-        </h1>
+    <Hero eventCount={events.length} />
+<div className="flex items-center justify-between mb-8">
+  <div>
+    <h2 className="text-4xl font-bold text-gray-800 dark:text-white">
+       Événements populaires
+    </h2>
 
-        <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-          Explorez, réservez et participez aux événements les plus marquants
-          de Madagascar.
-        </p>
-      </section>
+    <p className="text-gray-600 dark:text-gray-400 mt-2">
+      Les événements les plus consultés du moment
+    </p>
+  </div>
+
+  <button className="text-indigo-600 font-semibold hover:underline">
+    Voir tout →
+  </button>
+</div>
 
       {/* Events Grid */}
       <section>
@@ -142,14 +151,13 @@ export default function Home() {
     {event.title}
   </h3>
 
-  {/* DESCRIPTION */}
-  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3 mb-5">
-    {event.description}
-  </p>
-
   {/* INFOS */}
   <div className="space-y-4">
-
+ <div
+    className="bg-gray-50 dark:bg-gray-800/60
+    rounded-2xl p-4 border border-gray-100
+    dark:border-gray-700"
+  >
     {/* DATE */}
     <div className="flex items-start gap-3">
       <div className="p-2 rounded-xl bg-indigo-100 dark:bg-indigo-900/40">
@@ -173,8 +181,13 @@ export default function Home() {
         </p>
       </div>
     </div>
-
+</div>
     {/* LOCATION */}
+     <div
+    className="bg-gray-50 dark:bg-gray-800/60
+    rounded-2xl p-4 border border-gray-100
+    dark:border-gray-700"
+  >
     <div className="flex items-start gap-3">
       <div className="p-2 rounded-xl bg-purple-100 dark:bg-purple-900/40">
         <MapPin
@@ -197,39 +210,40 @@ export default function Home() {
         </p>
       </div>
     </div>
+</div>
 
-    {/* CAPACITY */}
-    <div className="flex items-start gap-3">
-      <div className="p-2 rounded-xl bg-pink-100 dark:bg-pink-900/40">
-        <Ticket
-          size={18}
-          className="text-pink-600 dark:text-pink-300"
-        />
-      </div>
-
-      <div>
-        <p className="text-sm font-semibold text-gray-800 dark:text-white">
-          Places disponibles
-        </p>
-
-        <p className="text-sm text-gray-600 dark:text-gray-300">
-          {event.capacity} places
-        </p>
-      </div>
-    </div>
   </div>
 
   {/* BUTTON */}
+<div className="flex gap-3 mt-7">
+
+  {/* Bouton Détails */}
   <button
-    className="w-full mt-7 flex items-center justify-center gap-2
+    className="flex-1 py-4 rounded-2xl
+    border-2 border-indigo-600
+    text-indigo-600 dark:text-indigo-400
+    font-semibold
+    hover:bg-indigo-50
+    dark:hover:bg-indigo-950/40
+    transition-all duration-300"
+  >
+    Détails
+  </button>
+
+  {/* Bouton Réserver */}
+  <button
+    className="flex-1 flex items-center justify-center gap-2
     py-4 rounded-2xl font-semibold text-white
     bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600
-    hover:scale-[1.02] hover:shadow-xl
+    hover:scale-[1.02]
+    hover:shadow-xl
     transition-all duration-300"
   >
     Réserver
     <ArrowRight size={18} />
   </button>
+
+</div>
 </div>
             </div>
           ))}

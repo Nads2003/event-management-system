@@ -75,7 +75,7 @@ const handleCreateEvent = () => {
     </button>
 
     {eventDropdown && (
-      <div className="absolute top-10 left-0 w-56 rounded-2xl bg-white dark:bg-gray-800 shadow-xl border dark:border-gray-700 p-2">
+      <div className="absolute top-10 left-0 w-56 rounded-2xl bg-white dark:bg-gray-800 dark:text-white shadow-xl border dark:border-gray-700 p-2">
 
         <Link
           to="/events"
@@ -134,7 +134,7 @@ const handleCreateEvent = () => {
         </div>
 
         {/* MOBILE BUTTON */}
-        <button className="lg:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
+        <button className="lg:hidden dark:text-white" onClick={() => setMobileOpen(!mobileOpen)}>
           {mobileOpen ? <X /> : <Menu />}
         </button>
       </div>
