@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEvents } from "../hooks/Event";
-import { Calendar, MapPin, Ticket } from "lucide-react";
+import { User, Calendar, MapPin, Ticket } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -96,7 +96,7 @@ export default function EventDetail() {
           </p>
 
           {/* INFOS GRID */}
-          <div className="grid md:grid-cols-3 gap-4 mt-8">
+          <div className="grid md:grid-cols-4 gap-4 mt-8">
 
             <div className="bg-gray-50 dark:bg-gray-800/60
     rounded-2xl p-4 border border-gray-100
@@ -138,6 +138,29 @@ export default function EventDetail() {
                 {event.capacity} disponibles
               </p>
             </div>
+            {/* ORGANISATEUR */}
+<div
+  className="bg-gray-50 dark:bg-gray-800/60
+  rounded-2xl p-4 border border-gray-100
+  dark:border-gray-700"
+>
+  <div className="flex items-center gap-3 mb-2">
+    <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-900/40">
+      <User
+        size={18}
+        className="text-emerald-600 dark:text-emerald-300"
+      />
+    </div>
+
+    <span className="font-semibold text-gray-800 dark:text-white">
+      Organisateur
+    </span>
+  </div>
+
+<p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+    { event.organizer?.firstName && event.organizer?.lastName ? `${event.organizer.firstName} ${event.organizer.lastName}` : "Non renseigné"}
+  </p>
+</div>
 
           </div>
         </div>

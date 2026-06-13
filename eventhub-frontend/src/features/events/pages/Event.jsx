@@ -1,6 +1,6 @@
 import { useState } from "react";
 //pour les icones
-import { Calendar, MapPin, Ticket, Search } from "lucide-react";
+import { User, Calendar, MapPin, Ticket, Search } from "lucide-react";
 //composant hooks events
 import{useEvents} from "../hooks/Event";
 //pour le carousel
@@ -9,6 +9,8 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+//
+import { Link } from "react-router-dom";
 
 export default function Events() {
   // ✅ state global des events
@@ -201,54 +203,69 @@ text-xs font-semibold">
     </p>
   </div>
 
-  {/* PLACES */}
-  <div
-    className="bg-gray-50 dark:bg-gray-800/60
-    rounded-2xl p-4 border border-gray-100
-    dark:border-gray-700"
-  >
-    <div className="flex items-center gap-3 mb-2">
-      <div className="p-2 rounded-xl bg-pink-100 dark:bg-pink-900/40">
-        <Ticket
-          size={18}
-          className="text-pink-600 dark:text-pink-300"
-        />
-      </div>
-
-      <span className="font-semibold text-gray-800 dark:text-white">
-        Places
-      </span>
+{/* ORGANISATEUR */}
+<div
+  className="bg-gray-50 dark:bg-gray-800/60
+  rounded-2xl p-4 border border-gray-100
+  dark:border-gray-700"
+>
+  <div className="flex items-center gap-3 mb-2">
+    <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-900/40">
+      <User
+        size={18}
+        className="text-emerald-600 dark:text-emerald-300"
+      />
     </div>
 
-    <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-      {event.capacity} disponibles
-    </p>
+    <span className="font-semibold text-gray-800 dark:text-white">
+      Organisateur
+    </span>
   </div>
+
+  <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+    { event.organizer?.firstName && event.organizer?.lastName ? `${event.organizer.firstName} ${event.organizer.lastName}` : "Non renseigné"}
+  </p>
+</div>
 
 </div>
               </div>
 
               {/* BUTTON */}
-            <div className="flex gap-3 mt-6">
+  <div className="flex gap-3 mt-6">
 
-  <button
-    className="flex-1 py-3 rounded-2xl
-    border border-indigo-600
-    text-indigo-600 font-semibold
-    hover:bg-indigo-50
-    dark:hover:bg-indigo-950 transition"
+  {/* Détails */}
+  <Link
+    to={`/events/${event.id}`}
+    className="flex-1"
   >
-    Détails
-  </button>
+    <div
+      className="w-full py-3 rounded-2xl
+      border border-indigo-600
+      text-indigo-600 dark:text-indigo-400
+      font-semibold text-center
+      hover:bg-indigo-50
+      dark:hover:bg-indigo-950/40
+      transition-all duration-300"
+    >
+      Détails
+    </div>
+  </Link>
 
-  <button
-    className="flex-1 py-3 rounded-2xl
-    bg-gradient-to-r from-indigo-600 to-purple-600
-    text-white font-semibold
-    hover:scale-105 transition"
+  {/* Réserver */}
+  <Link
+    to={`/events/${event.id}`}
+    className="flex-1"
   >
-    Réserver
-  </button>
+    <div
+      className="w-full py-3 rounded-2xl
+      bg-gradient-to-r from-indigo-600 to-purple-600
+      text-white font-semibold text-center
+      hover:shadow-lg hover:scale-[1.02]
+      transition-all duration-300"
+    >
+      Réserver
+    </div>
+  </Link>
 
 </div>
 
