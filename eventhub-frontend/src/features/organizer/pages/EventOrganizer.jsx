@@ -215,7 +215,7 @@ focus:ring-2 focus:ring-indigo-500"
 
   {/* PRICE */}
 {/* PRICE */}
-<div className="flex flex-col">
+<div className="flex flex-col dark:text-white">
   <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
     Prix
   </label>
@@ -231,7 +231,7 @@ focus:ring-2 focus:ring-indigo-500"
         ? "Événement gratuit"
         : "Entrer le prix"
     }
-    className={`w-full px-4 py-2 border rounded-lg outline-none transition
+    className={`w-full px-4 py-2 border rounded-lg outline-none transition  dark:bg-gray-800
     ${
       form.eventype === "GRATUIT"
         ? "bg-gray-100 text-gray-400 cursor-not-allowed"

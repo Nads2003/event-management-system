@@ -1,5 +1,5 @@
 //pour les icones
-import { Calendar, MapPin, Ticket, ArrowRight } from "lucide-react";
+import { User,Calendar, MapPin, Ticket, ArrowRight } from "lucide-react";
 //composant guide et hooks events
 import Guide from "../../features/guide/Guide";
 import{useEvents} from "../../features/events/hooks/Event";
@@ -51,9 +51,12 @@ export default function Home() {
     </p>
   </div>
 
-  <button className="text-indigo-600 font-semibold hover:underline">
-    Voir tout →
-  </button>
+ <Link
+  to="/events"
+  className="text-indigo-600 font-semibold hover:underline"
+>
+  Voir tout →
+</Link>
 </div>
 
       {/* Events Grid */}
@@ -153,6 +156,29 @@ export default function Home() {
 
   {/* INFOS */}
   <div className="space-y-4">
+    {/* ORGANISATEUR */}
+<div
+  className="bg-gray-50 dark:bg-gray-800/60
+  rounded-2xl p-4 border border-gray-100
+  dark:border-gray-700"
+>
+  <div className="flex items-center gap-3 mb-2">
+    <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-900/40">
+      <User
+        size={18}
+        className="text-emerald-600 dark:text-emerald-300"
+      />
+    </div>
+
+    <span className="font-semibold text-gray-800 dark:text-white">
+      Organisateur
+    </span>
+  </div>
+
+  <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+    { event.organizer?.firstName && event.organizer?.lastName ? `${event.organizer.firstName} ${event.organizer.lastName}` : "Non renseigné"}
+  </p>
+</div>
  <div
     className="bg-gray-50 dark:bg-gray-800/60
     rounded-2xl p-4 border border-gray-100
