@@ -11,6 +11,7 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
+// constructeur
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -44,4 +45,5 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Reservation> reservations;
+
 }

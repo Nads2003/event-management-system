@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEvents } from "../hooks/Event";
-import { User, Calendar, MapPin, Ticket } from "lucide-react";
+import { User, Calendar, MapPin, Ticket,  Navigation as NavigationIcon } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -114,18 +114,42 @@ export default function EventDetail() {
         </p>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-800/60
-    rounded-2xl p-4 border border-gray-100
-    dark:border-gray-700">
-              <div className="flex items-center gap-2 mb-2">
-                <MapPin className="text-purple-600" size={18} />
-                <span className="font-semibold dark:text-white">Lieu</span>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {event.city}
-              </p>
-              <p className="text-xs text-gray-500">{event.address}</p>
-            </div>
+            <div
+  className="bg-gray-50 dark:bg-gray-800/60
+  rounded-2xl p-4 border border-gray-100
+  dark:border-gray-700"
+>
+  <div className="flex items-center gap-2 mb-2">
+    <MapPin className="text-purple-600" size={18} />
+    <span className="font-semibold dark:text-white">
+      Lieu
+    </span>
+  </div>
+
+  <p className="text-sm text-gray-600 dark:text-gray-300">
+    {event.city}
+  </p>
+
+  <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+    {event.address}
+  </p>
+
+  <a
+    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      `${event.address} ${event.city}`
+    )}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="inline-flex items-center gap-2
+    px-3 py-2 rounded-xl
+    bg-purple-600 hover:bg-purple-700
+    text-white text-xs font-semibold
+    transition-all duration-300"
+  >
+    <NavigationIcon size={14} />
+    Voir sur Google Maps
+  </a>
+</div>
 
             <div className="bg-gray-50 dark:bg-gray-800/60
     rounded-2xl p-4 border border-gray-100
