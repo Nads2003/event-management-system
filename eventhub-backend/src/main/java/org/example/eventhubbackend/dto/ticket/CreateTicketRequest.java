@@ -7,8 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 public class CreateTicketRequest {
-
-    private String name;
+    private TicketType ticketType;
 
     private String description;
 
@@ -16,5 +15,5 @@ public class CreateTicketRequest {
 
     private Integer quantity;
 
-    private TicketType ticketType;
+
 }

@@ -12,7 +12,7 @@ public class TicketResponse {
 
     private Long id;
 
-    private String name;
+    private TicketType ticketType;
 
     private String description;
 
@@ -22,5 +22,5 @@ public class TicketResponse {
 
     private Integer quantityAvailable;
 
-    private TicketType ticketType;
+
 }
