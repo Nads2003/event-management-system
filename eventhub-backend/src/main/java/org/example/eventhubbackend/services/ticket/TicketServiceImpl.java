@@ -46,7 +46,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<TicketResponse> getTicketsByEvent(Long eventId) {
 
-        return ticketRepository.findById(eventId)
+        return ticketRepository.findByEventId(eventId)
                 .stream()
                 .map(this::map)
                 .toList();

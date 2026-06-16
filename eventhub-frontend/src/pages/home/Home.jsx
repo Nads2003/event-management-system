@@ -17,6 +17,9 @@ import { Link } from "react-router-dom";
 export default function Home() {
   // ✅ state global des events
   const { events } = useEvents();
+
+
+console.log(events);
   //fonction pour formater la date en français
   const formatEventDate = (date) => {
   const d = new Date(date);

@@ -6,7 +6,7 @@ import Login from "../features/auth/pages/Login";
 import Register from "../features/auth/pages/Register";
 import Events from "../features/events/pages/Event";
 import EventDetail from "../features/events/pages/EventDetail";
-
+import TicketManagement from "../features/ticket/page/TicketManagement";
 function App() {
   return (
     <Routes>
@@ -19,10 +19,8 @@ function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/events" element={<Events />} />
-        <Route
-  path="/creer-event"
-  element={<OrganizerEvents />}
-/>
+        <Route path="/creer-event" element={<OrganizerEvents />}/>
+        <Route path="/organizer/events/:id/tickets" element={<TicketManagement />} />
         <Route path="/events/:id" element={<EventDetail />} />
       </Route>
 

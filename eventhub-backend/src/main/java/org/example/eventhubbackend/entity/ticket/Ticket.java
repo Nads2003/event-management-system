@@ -1,5 +1,6 @@
 package org.example.eventhubbackend.entity.ticket;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.eventhubbackend.entity.event.Event;
@@ -52,5 +53,6 @@ public class Ticket {
 
     @ManyToOne
     @JoinColumn(name = "event_id")
+    @JsonIgnore
     private Event event;
 }

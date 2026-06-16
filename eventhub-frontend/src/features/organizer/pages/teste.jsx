@@ -1,123 +1,141 @@
 import { useState } from "react";
+import { useOrganizerEvents } from "../hooks/useOrganizerEvents";
+//pour le carousel
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+///lien
+import { Link } from "react-router-dom";
 
-export default function EventForm({ onSubmit }) {
-   // ✅ state global des events
- const now = new Date().toISOString().slice(0, 16);
- // ✅ state local du formulaire
- const [form, setForm] = useState({
-   title: "",
-   description: "",
-   startDate: now,
-   endDate: now,
-   address: "",
-   city: "",
-   category: "CONCERT",
-   eventype:"GRATUIT",
-   price: "",
-   capacity: "",
-   media: [],
- });
- 
-   // ✅ MEDIA devient FILE
-   const [media, setMedia] = useState({
-     file: null,
-     type: "IMAGE",
-   });
- //fonction générique pour tous les inputs
- const handleChange = (e) => {
-   const { name, value } = e.target;
- 
-   setForm((prev) => {
-     const updated = {
-       ...prev,
-       [name]: value,
-     };
- 
-     // si gratuit → prix vide
-     if (name === "eventype" && value === "GRATUIT") {
-       updated.price = "";
-     }
- 
-     // si date fin < date début
-     if (
-       name === "startDate" &&
-       updated.endDate < value
-     ) {
-       updated.endDate = value;
-     }
- 
-     return updated;
-   });
- };
- // ✅ format date FR
- const formatEventDate = (date) => {
-   return new Date(date).toLocaleString("fr-FR", {
-     day: "2-digit",
-     month: "long",
-     year: "numeric",
-     hour: "2-digit",
-     minute: "2-digit",
-   });
- };
-   // ✅ ajouter fichier (PC)
- const addMedia = () => {
-   if (!media.file) return;
- 
-   const previewUrl = URL.createObjectURL(media.file);
- 
- setForm((prev) => ({
-   ...prev,
-   media: [...prev.media, media],
- }));
- 
-   setMedia({ file: null, type: "IMAGE" });
- };
- 
-   // ✅ submit
- const handleSubmit = async (e) => {
-   e.preventDefault();
- 
-   try {
-     const formData = new FormData();
- console.log(form);
-     formData.append("title", form.title);
-     formData.append("description", form.description);
-     formData.append("address", form.address);
-     formData.append("city", form.city);
-     formData.append("category", form.category);
-     formData.append("capacity", form.capacity);
-     formData.append("eventType", form.eventype);
-     formData.append("price", form.price);
-     formData.append("startDate",form.startDate);
-     formData.append("endDate",form.endDate);
-     form.media.forEach((m) => {
-       formData.append("files", m.file);
-       formData.append("types", m.type);
-     });
- 
-     await onSubmit(formData);
- 
-    setForm({
-   title: "",
-   description: "",
-   startDate: now,
-   endDate: now,
-   address: "",
-   city: "",
-   category: "CONCERT",
-   eventype: "GRATUIT",
-   price: "",
-   capacity: "",
-   media: [],
- });
- 
-   } catch (error) {
-     console.log(error);
-   }
- };
+export default function EventOrganizer() {
+  // ✅ state global des events
+const { events, addEvent, removeEvent } = useOrganizerEvents();
+const now = new Date().toISOString().slice(0, 16);
+// ✅ state local du formulaire
+const [form, setForm] = useState({
+  title: "",
+  description: "",
+  startDate: now,
+  endDate: now,
+  address: "",
+  city: "",
+  category: "CONCERT",
+  eventype:"GRATUIT",
+  price: "",
+  capacity: "",
+  media: [],
+});
+
+  // ✅ MEDIA devient FILE
+  const [media, setMedia] = useState({
+    file: null,
+    type: "IMAGE",
+  });
+//fonction générique pour tous les inputs
+const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  setForm((prev) => {
+    const updated = {
+      ...prev,
+      [name]: value,
+    };
+
+    // si gratuit → prix vide
+    if (name === "eventype" && value === "GRATUIT") {
+      updated.price = "";
+    }
+
+    // si date fin < date début
+    if (
+      name === "startDate" &&
+      updated.endDate < value
+    ) {
+      updated.endDate = value;
+    }
+
+    return updated;
+  });
+};
+// ✅ format date FR
+const formatEventDate = (date) => {
+  return new Date(date).toLocaleString("fr-FR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+  // ✅ ajouter fichier (PC)
+const addMedia = () => {
+  if (!media.file) return;
+
+  const previewUrl = URL.createObjectURL(media.file);
+
+setForm((prev) => ({
+  ...prev,
+  media: [...prev.media, media],
+}));
+
+  setMedia({ file: null, type: "IMAGE" });
+};
+
+  // ✅ submit
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const formData = new FormData();
+console.log(form);
+    formData.append("title", form.title);
+    formData.append("description", form.description);
+    formData.append("address", form.address);
+    formData.append("city", form.city);
+    formData.append("category", form.category);
+    formData.append("capacity", form.capacity);
+    formData.append("eventType", form.eventype);
+    formData.append("price", form.price);
+    formData.append("startDate",form.startDate);
+    formData.append("endDate",form.endDate);
+    form.media.forEach((m) => {
+      formData.append("files", m.file);
+      formData.append("types", m.type);
+    });
+
+    await addEvent(formData);
+
+   setForm({
+  title: "",
+  description: "",
+  startDate: now,
+  endDate: now,
+  address: "",
+  city: "",
+  category: "CONCERT",
+  eventype: "GRATUIT",
+  price: "",
+  capacity: "",
+  media: [],
+});
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   return (
-         <form
+    <div className="p-6 mt-24 min-h-screen
+bg-gradient-to-br from-indigo-50 via-white to-purple-100
+dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950">
+      <h1 className="text-2xl font-bold mb-6">
+        Dashboard Organisateur
+      </h1>
+
+      {/* FORM */}
+     <form
   onSubmit={handleSubmit}
    className="bg-white/80 dark:bg-gray-900/80
   backdrop-blur-md p-6 rounded-2xl shadow-lg border
@@ -448,5 +466,150 @@ space-y-3">
     Créer l'événement
   </button>
 </form>
+
+      {/* LIST */}
+  <div className="mt-10 grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+  {events.map((ev) => (
+    <div
+      key={ev.id}
+      className="bg-white dark:bg-gray-900
+rounded-3xl overflow-hidden shadow-lg
+border border-gray-100 dark:border-gray-700"
+    >
+      <div className="relative overflow-hidden">
+        
+      {/* MEDIA CAROUSEL */}
+{ev.media?.length > 0 ? (
+  <Swiper
+    modules={[Navigation, Pagination, Autoplay]}
+    navigation
+    pagination={{ clickable: true }}
+    autoplay={{ delay: 3000 }}
+    spaceBetween={0}
+    slidesPerView={1}
+    className="h-64"
+  >
+    {ev.media.map((m, i) => (
+      <SwiperSlide key={i}>
+        {m.type === "IMAGE" ? (
+          <img
+            src={`http://localhost:8080${m.url}`}
+            alt=""
+            className="h-64 w-full object-cover"
+          />
+        ) : (
+          <video
+            src={`http://localhost:8080${m.url}`}
+            className="h-64 w-full object-cover"
+            controls
+          />
+        )}
+      </SwiperSlide>
+    ))}
+  </Swiper>
+) : (
+  <div className="h-44 bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xl font-bold">
+    Aucun média
+  </div>
+  
+)}
+  <span
+    className={`absolute top-4 right-4 px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-20 
+    ${
+      ev.type === "GRATUIT"
+        ? "bg-green-500 text-white"
+        : "bg-yellow-400 text-black"
+    }`}
+  >
+    {ev.type === "GRATUIT"
+      ? "🎉 Gratuit"
+      : `💰 ${ev.price.toLocaleString("fr-FR")} Ar`}
+  </span>
+  </div>
+
+      {/* CONTENT */}
+      <div className="p-5">
+        <div className="flex items-start justify-between dark:text-gray-400" >
+          <div>
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">
+              {ev.title}
+            </h2>
+                        
+            <p className="text-sm text-gray-500 mt-1  dark:text-gray-200">
+              📍 {ev.location}
+            </p>
+            <p className="text-sm text-gray-500  dark:text-gray-200">
+  🏙️ {ev.city}
+</p>
+
+<p className="text-sm text-gray-500  dark:text-gray-200">
+  🛣️ {ev.address}
+</p>
+
+<span className="inline-block mt-2 bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full ">
+  {ev.category}
+</span>
+          </div>
+
+          <span className="bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full ">
+            {ev.capacity} places
+          </span>
+        </div>
+
+        <p className="text-gray-600 mt-4 line-clamp-3  dark:text-gray-200" >
+          {ev.description}
+        </p>
+         <p className="text-sm text-gray-500 mt-2  dark:text-gray-200">
+  📅 {formatEventDate(ev.startDate)} au{" "}
+  {formatEventDate(ev.endDate)}
+</p>
+        {/* ACTIONS */}
+   <div className="mt-6 flex gap-3">
+
+  <button
+    onClick={() => {
+      const confirmDelete = window.confirm(
+        "Voulez-vous vraiment supprimer cet événement ?"
+      );
+
+      if (confirmDelete) {
+        removeEvent(ev.id);
+      }
+    }}
+    className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl transition font-medium"
+  >
+    Supprimer
+  </button>
+
+  <Link
+    to={`/events/${ev.id}`}
+    className="flex-1"
+  >
+    <button
+      className="w-full bg-indigo-600 hover:bg-indigo-700
+      text-white py-2 rounded-xl transition font-medium"
+    >
+      Voir
+    </button>
+  </Link>
+
+  <Link
+    to={`/organizer/events/${ev.id}/tickets`}
+    className="flex-1"
+  >
+    <button
+      className="w-full bg-emerald-600 hover:bg-emerald-700
+      text-white py-2 rounded-xl transition font-medium"
+    >
+      🎟️ Tickets
+    </button>
+  </Link>
+
+</div>
+      </div>
+    </div>
+  ))}
+</div>
+    </div>
   );
 }
