@@ -45,8 +45,11 @@ public class ReservationService {
         Event event = eventRepository.findById(request.getEventId())
                 .orElseThrow();
 
-        Ticket ticket = ticketRepository.findById(request.getTicketId())
-                .orElseThrow();
+        Ticket ticket = ticketRepository.findByEventId(request.getTicketId())
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Ticket introuvable"));
+
 
         // ✅ Vérifier les places disponibles
         if(ticket.getQuantityAvailable() < request.getQuantity()){
