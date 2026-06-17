@@ -37,7 +37,6 @@ public class EventController {
 
             @RequestParam(required = false) EventCategory category,
             @RequestParam(required = false) EventType eventType,
-            @RequestParam(required = false) BigDecimal price,
 
             @RequestParam(required = false) LocalDateTime startDate,
             @RequestParam(required = false) LocalDateTime endDate,
@@ -58,7 +57,7 @@ public class EventController {
                         city,
                         category,
                         eventType,
-                        price,
+
                         startDate,
                         endDate,
                         files,
