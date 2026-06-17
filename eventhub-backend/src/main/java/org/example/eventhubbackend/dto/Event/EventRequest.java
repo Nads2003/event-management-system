@@ -20,7 +20,6 @@ public class EventRequest {
     private Integer capacity;
     private EventCategory category;
     private EventType eventType;
-    private BigDecimal price;
     private Long organizerId;
 
     private List<EventMediaRequest> media;

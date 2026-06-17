@@ -78,7 +78,7 @@ border border-gray-100 dark:border-gray-700"
   >
     {ev.type === "GRATUIT"
       ? "🎉 Gratuit"
-      : `💰 ${ev.price.toLocaleString("fr-FR")} Ar`}
+      : `💰 ${ev.price} Ar`}
   </span>
   </div>
 
@@ -148,6 +148,7 @@ border border-gray-100 dark:border-gray-700"
     </button>
   </Link>
 
+  {ev.type !== "GRATUIT" && (
   <Link
     to={`/organizer/events/${ev.id}/tickets`}
     className="flex-1"
@@ -159,6 +160,7 @@ border border-gray-100 dark:border-gray-700"
       🎟️ Tickets
     </button>
   </Link>
+)}
 
 </div>
       </div>

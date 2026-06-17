@@ -12,5 +12,5 @@ public interface TicketService {
     );
 
     List<TicketResponse> getTicketsByEvent(Long eventId);
-
+    void deleteTicket(Integer ticketId);
 }

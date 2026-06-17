@@ -13,7 +13,7 @@ export default function EventForm({ onSubmit }) {
    city: "",
    category: "CONCERT",
    eventype:"GRATUIT",
-   price: "",
+ 
    capacity: "",
    media: [],
  });
@@ -87,7 +87,6 @@ export default function EventForm({ onSubmit }) {
      formData.append("category", form.category);
      formData.append("capacity", form.capacity);
      formData.append("eventType", form.eventype);
-     formData.append("price", form.price);
      formData.append("startDate",form.startDate);
      formData.append("endDate",form.endDate);
      form.media.forEach((m) => {
@@ -106,7 +105,7 @@ export default function EventForm({ onSubmit }) {
    city: "",
    category: "CONCERT",
    eventype: "GRATUIT",
-   price: "",
+
    capacity: "",
    media: [],
  });
@@ -196,34 +195,6 @@ focus:ring-2 focus:ring-indigo-500"
       <option value="PAYANT">PAYANT</option>
     </select>
   </div>
-
-  {/* PRICE */}
-{/* PRICE */}
-<div className="flex flex-col dark:text-white">
-  <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
-    Prix
-  </label>
-
-  <input
-    type="number"
-    name="price"
-    value={form.price}
-    onChange={handleChange}
-    readOnly={form.eventype === "GRATUIT"}
-    placeholder={
-      form.eventype === "GRATUIT"
-        ? "Événement gratuit"
-        : "Entrer le prix"
-    }
-    className={`w-full px-4 py-2 border rounded-lg outline-none transition  dark:bg-gray-800
-    ${
-      form.eventype === "GRATUIT"
-        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-        : "focus:ring-2 focus:ring-indigo-500"
-    }`}
-  />
-</div>
-
   {/* ADDRESS */}
   <div className="flex flex-col">
     <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">

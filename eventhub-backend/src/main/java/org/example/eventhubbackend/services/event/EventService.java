@@ -35,7 +35,7 @@ public Event createEvent(
         String city,
         EventCategory category,
         EventType eventType,
-        BigDecimal price,
+
         LocalDateTime startDate,
         LocalDateTime endDate,
         List<MultipartFile> files,
@@ -53,7 +53,6 @@ public Event createEvent(
             .city(city)
             .category(category)
             .type(eventType)
-            .price(price)
             .startDate(startDate)
             .endDate(endDate)
             .organizer(organizer)

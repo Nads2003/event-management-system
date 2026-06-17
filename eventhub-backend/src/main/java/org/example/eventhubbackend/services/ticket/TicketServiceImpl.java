@@ -7,6 +7,7 @@ import org.example.eventhubbackend.dto.ticket.TicketResponse;
 import org.example.eventhubbackend.entity.event.Event;
 import org.example.eventhubbackend.entity.ticket.Ticket;
 import org.example.eventhubbackend.repository.event.EventRepository;
+import org.example.eventhubbackend.repository.reservation.ReservationItemRepository;
 import org.example.eventhubbackend.repository.ticket.TicketRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
     private final EventRepository eventRepository;
+    private final ReservationItemRepository reservationItemRepository;
 
     @Override
     public TicketResponse createTicket(
@@ -28,6 +30,13 @@ public class TicketServiceImpl implements TicketService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() ->
                         new RuntimeException("Event introuvable"));
+        boolean ticketExiste = ticketRepository.existsByEventIdAndType(
+                eventId,
+                request.getTicketType()
+        );
+        if (ticketExiste) {
+            throw new RuntimeException("Ticket est dejà existente");
+        }
 
         Ticket ticket = Ticket.builder()
                 .type(request.getTicketType())
@@ -52,6 +61,7 @@ public class TicketServiceImpl implements TicketService {
                 .toList();
     }
 
+
     private TicketResponse map(Ticket ticket) {
 
         return TicketResponse.builder()
@@ -63,4 +73,23 @@ public class TicketServiceImpl implements TicketService {
                 .quantityAvailable(ticket.getQuantityAvailable())
                 .build();
     }
+
+    @Override
+    public void deleteTicket(Integer ticketId) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() ->
+                        new RuntimeException("Ticket introuvable"));
+
+        boolean utiliseDansReservation =
+                reservationItemRepository.existsByTicketId(ticketId);
+
+        if (utiliseDansReservation) {
+            throw new RuntimeException(
+                    "Impossible de supprimer ce ticket car il est déjà utilisé dans une réservation"
+            );
+        }
+
+        ticketRepository.delete(ticket);
+    }
+
 }
