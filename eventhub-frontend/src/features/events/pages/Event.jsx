@@ -53,7 +53,7 @@ export default function Events() {
       <div className="flex flex-col md:flex-row gap-4 mb-10">
 
         {/* Search */}
-        <div className="flex items-center gap-2 bg-white dark:bg-gray-800/60 px-4 py-3 rounded-2xl shadow w-full">
+        <div className="flex items-center gap-2 bg-white/80 dark:bg-gray-800/60 px-4 py-3 rounded-2xl shadow w-full">
           <Search className="text-gray-400" />
           <input
             type="text"
@@ -64,7 +64,7 @@ export default function Events() {
         </div>
 
         {/* Categories */}
-        <select className="px-4 py-3 rounded-2xl bg-white dark:bg-gray-800/60 text-gray-700 dark:text-white shadow">
+        <select className="px-4 py-3 rounded-2xl bg-white/80 dark:bg-gray-800/60 text-gray-700 dark:text-white shadow">
           <option>Toutes catégories</option>
           <option>Festival</option>
           <option>Tech</option>
@@ -127,19 +127,29 @@ export default function Events() {
                     {event.title}
                   </h3>
                   
-
-                   <span
-      className={`px-3 py-1 rounded-full text-xs font-bold
-      ${
-        event.type === "GRATUIT"
-          ? "bg-green-500 text-white"
-          : "bg-yellow-400 text-black"
-      }`}
-    >
-      {event.type === "GRATUIT"
-        ? "🎉 Gratuit"
-        : `💰 ${event.price} Ar`}
-    </span>
+{event.type === "GRATUIT" ? (
+  <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white">
+    🎉 Gratuit
+  </span>
+) : (
+  <div className="flex flex-col gap-1">
+    {event.tickets?.length > 0 ? (
+      event.tickets.map((ticket) => (
+        <span
+          key={ticket.id}
+          className="px-3 py-1 rounded-full text-xs font-bold bg-yellow-400 text-black"
+        >
+          🎟️ {ticket.type} :{" "}
+          {ticket.price?.toLocaleString("fr-FR")} Ar
+        </span>
+      ))
+    ) : (
+      <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-500 text-white">
+        ⚠️ Aucun ticket
+      </span>
+    )}
+  </div>
+)}
                 </div>
 
                 <span className="inline-block mt-2 px-3 py-1 rounded-full
@@ -252,6 +262,8 @@ text-xs font-semibold">
   </Link>
 
   {/* Réserver */}
+ {(event.type === "GRATUIT" ||
+  (event.tickets && event.tickets.length > 0)) && (
   <Link
     to={`/events/${event.id}`}
     className="flex-1"
@@ -266,6 +278,7 @@ text-xs font-semibold">
       Réserver
     </div>
   </Link>
+)}
 
 </div>
 

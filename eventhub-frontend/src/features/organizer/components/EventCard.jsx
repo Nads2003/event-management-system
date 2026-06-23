@@ -27,7 +27,7 @@ export default function EventCard({
 
     <div
       key={ev.id}
-      className="bg-white dark:bg-gray-900
+      className="bg-white dark:bg-gray-900/80
 rounded-3xl overflow-hidden shadow-lg
 border border-gray-100 dark:border-gray-700"
     >
@@ -68,18 +68,24 @@ border border-gray-100 dark:border-gray-700"
   </div>
   
 )}
-  <span
-    className={`absolute top-4 right-4 px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-20 
-    ${
-      ev.type === "GRATUIT"
-        ? "bg-green-500 text-white"
-        : "bg-yellow-400 text-black"
-    }`}
-  >
-    {ev.type === "GRATUIT"
-      ? "🎉 Gratuit"
-      : `💰 ${ev.price} Ar`}
+{ev.type === "GRATUIT" ? (
+  <span className="absolute top-4 right-4 px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-20 bg-green-500 text-white">
+    🎉 Gratuit
   </span>
+) : (
+  <div className="absolute top-4 right-4 bg-white/90 rounded-lg p-2 shadow-lg z-20 text-xs">
+    {ev.tickets?.length > 0 ? (
+      ev.tickets.map((ticket) => (
+        <div key={ticket.id}>
+          <strong>{ticket.type}</strong> :{" "}
+          {ticket.price?.toLocaleString("fr-FR")} Ar
+        </div>
+      ))
+    ) : (
+      <div>Aucun ticket</div>
+    )}
+  </div>
+)}
   </div>
 
       {/* CONTENT */}

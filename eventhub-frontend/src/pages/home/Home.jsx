@@ -111,19 +111,38 @@ console.log(events);
   )}
 
   {/* BADGE */}
-  <span
-    className={`absolute top-4 right-4 px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-20
-    ${
-      event.type === "GRATUIT"
-        ? "bg-green-500 text-white"
-        : "bg-yellow-400 text-black"
-    }`}
-  >
-    {event.type === "GRATUIT"
-      ? "🎉 Gratuit"
-      : `💰 ${event.price} Ar`}
+ {event.type === "GRATUIT" ? (
+  <span className="absolute top-4 right-4 px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-20 bg-green-500 text-white">
+    🎉 Gratuit
   </span>
+) : (
+  <div className="absolute top-4 right-4 z-20 flex flex-col gap-2 max-w-[220px]">
+    {event.tickets?.length > 0 ? (
+      event.tickets.map((ticket) => (
+        <div
+          key={ticket.id}
+          className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm
+          px-3 py-2 rounded-xl shadow-md border border-yellow-300
+          text-xs font-medium"
+        >
+          <div className="flex justify-between items-center gap-2">
+            <span className="font-bold text-yellow-700 dark:text-yellow-400">
+              {ticket.type} :
+            </span>
 
+            <span className="text-gray-800 dark:text-gray-100">
+              {ticket.price?.toLocaleString("fr-FR")} Ar
+            </span>
+          </div>
+        </div>
+      ))
+    ) : (
+      <div className="bg-red-500 text-white px-3 py-2 rounded-xl shadow-md text-xs font-medium">
+        ⚠️ Aucun ticket
+      </div>
+    )}
+  </div>
+)}
 </div>
 
               {/* Content */}
@@ -138,18 +157,7 @@ console.log(events);
       {event.category}
     </span>
 
-    <span
-      className={`px-3 py-1 rounded-full text-xs font-bold
-      ${
-        event.type === "GRATUIT"
-          ? "bg-green-500 text-white"
-          : "bg-yellow-400 text-black"
-      }`}
-    >
-      {event.type === "GRATUIT"
-        ? "🎉 Gratuit"
-        : `💰 ${event.price} Ar`}
-    </span>
+
   </div>
 
   {/* TITLE */}
