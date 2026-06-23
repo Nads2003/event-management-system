@@ -1,10 +1,10 @@
 export default function TicketCard({ ticket }) {
   return (
     <div
-      className="bg-white dark:bg-gray-900
+      className="bg-white dark:bg-gray-900/80 
       backdrop-blur-md p-6 rounded-2xl shadow-lg border
   border-gray-200 dark:border-gray-700
-  space-y-5"
+  space-y-5 "
     >
       <div className="flex justify-between">
 

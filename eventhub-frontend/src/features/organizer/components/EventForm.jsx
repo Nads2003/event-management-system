@@ -118,7 +118,7 @@ export default function EventForm({ onSubmit }) {
   return (
          <form
   onSubmit={handleSubmit}
-   className="bg-white/80 dark:bg-gray-900/80
+   className="bg-white/80 dark:bg-gray-900/80 
   backdrop-blur-md p-6 rounded-2xl shadow-lg border
   border-gray-200 dark:border-gray-700
   space-y-5"

@@ -30,7 +30,7 @@ export default function TicketManagement() {
         onSubmit={addTicket}
       />
 
-      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mt-10 ">
+      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mt-20 ">
 
         {tickets.map((ticket) => (
           <TicketCard

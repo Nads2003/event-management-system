@@ -11,9 +11,11 @@ export default function EventOrganizer() {
   };
 
   return (
-       <div className="p-6 mt-20 min-h-screen 
-bg-gradient-to-br from-indigo-50 via-white to-purple-100
-dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950">
+       <div
+  className="min-h-screen pt-20 px-6 lg:px-16
+  bg-gradient-to-br from-indigo-50 via-white to-purple-100
+  dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950"
+>
       <EventForm onSubmit={handleCreateEvent} />
 
       <div className="mt-10 grid md:grid-cols-2 xl:grid-cols-3 gap-8">
