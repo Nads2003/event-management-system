@@ -101,6 +101,10 @@ public Event createEvent(
     public List<Event> getAllEvents() {
         return eventRepository.findAllwithMediaAndOrganizer();
     }
+    public Event getEventById(Long id) {
+        return eventRepository.findByIdWithDetails(id)
+                .orElseThrow(() -> new RuntimeException("Événement introuvable"));
+    }
     //evenement d'un organisateur
     public List<Event> getEventByOrganizer(Long organizer) {
         return eventRepository.findByOrganizerId(organizer);

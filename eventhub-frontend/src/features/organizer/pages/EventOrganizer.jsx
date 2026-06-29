@@ -18,7 +18,7 @@ export default function EventOrganizer() {
 >
       <EventForm onSubmit={handleCreateEvent} />
 
-      <div className="mt-10 grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+      <div className="mt-10  grid md:grid-cols-2 xl:grid-cols-3 gap-8">
         {events.map((event) => (
           <EventCard
             key={event.id}

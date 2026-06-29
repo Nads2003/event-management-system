@@ -70,6 +70,11 @@ public class EventController {
     public ResponseEntity<List<Event>> getAllEvents() {
         return ResponseEntity.ok(eventService.getAllEvents());
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<Event> getEventById(@PathVariable Long id) {
+        return ResponseEntity.ok(eventService.getEventById(id));
+    }
+
     //recuperer event à partir id
     @GetMapping("/organizer/{organizerId}")
     public ResponseEntity<List<Event>> getEventsByOrganizer(@PathVariable Long organizerId) {
