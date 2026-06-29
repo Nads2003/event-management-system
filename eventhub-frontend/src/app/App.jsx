@@ -7,6 +7,7 @@ import Register from "../features/auth/pages/Register";
 import Events from "../features/events/pages/Event";
 import EventDetail from "../features/events/pages/EventDetail";
 import TicketManagement from "../features/ticket/page/TicketManagement";
+import ReservationPage from "../features/reservation/page/Reservation";
 function App() {
   return (
     <Routes>
@@ -22,6 +23,10 @@ function App() {
         <Route path="/creer-event" element={<OrganizerEvents />}/>
         <Route path="/organizer/events/:id/tickets" element={<TicketManagement />} />
         <Route path="/events/:id" element={<EventDetail />} />
+        <Route
+    path="/events/:id/reservation"
+    element={<ReservationPage />}
+/>
       </Route>
 
     </Routes>

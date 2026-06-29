@@ -15,6 +15,8 @@ import { Link } from "react-router-dom";
 export default function Events() {
   // ✅ state global des events
   const { events } = useEvents();
+    const categories = [...new Set(events.map((e) => e.category))];
+
     const formatEventDate = (date) => {
   const d = new Date(date);
 
@@ -30,9 +32,17 @@ export default function Events() {
   return `${datePart} à ${hours}H${minutes}`;
 };
   const [search, setSearch] = useState("");
-  const filtered = events.filter((e) =>
-    e.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const[category, setCategory] = useState("");
+ const filtered = events.filter((event) => {
+  const matchSearch = event.title
+    .toLowerCase()
+    .includes(search.toLowerCase());
+
+  const matchCategory =
+    category === "" || event.category === category;
+
+  return matchSearch && matchCategory;
+});
 
   return (
     <div className="min-h-screen pt-27 px-6 lg:px-16 pb-5
@@ -64,12 +74,19 @@ export default function Events() {
         </div>
 
         {/* Categories */}
-        <select className="px-4 py-3 rounded-2xl bg-white/80 dark:bg-gray-800/60 text-gray-700 dark:text-white shadow">
-          <option>Toutes catégories</option>
-          <option>Festival</option>
-          <option>Tech</option>
-          <option>Concert</option>
-        </select>
+        <select
+               value={category}
+               onChange={(e) => setCategory(e.target.value)}
+               className="px-4 py-3 rounded-2xl bg-white/80 dark:bg-gray-800/60 text-gray-700 dark:text-white "
+          >
+          <option value="" >Toutes catégories</option>
+
+             {categories.map((cat) => (
+            <option key={cat} value={cat} >
+               {cat}
+               </option>
+            ))}
+       </select>
       </div>
 
       {/* EVENTS LIST (COLUMN STYLE) */}
@@ -265,7 +282,7 @@ text-xs font-semibold">
  {(event.type === "GRATUIT" ||
   (event.tickets && event.tickets.length > 0)) && (
   <Link
-    to={`/events/${event.id}`}
+    to={`/events/${event.id}/reservation`}
     className="flex-1"
   >
     <div
