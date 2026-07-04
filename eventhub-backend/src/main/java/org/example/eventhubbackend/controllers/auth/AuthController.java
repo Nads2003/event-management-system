@@ -1,7 +1,7 @@
 package org.example.eventhubbackend.controllers.auth;
 import org.example.eventhubbackend.dto.auth.AuthResponse;
 import org.example.eventhubbackend.entity.user.User;
-import org.example.eventhubbackend.services.reservation.UserService;
+import org.example.eventhubbackend.services.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

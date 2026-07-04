@@ -1,4 +1,4 @@
-package org.example.eventhubbackend.services.reservation;
+package org.example.eventhubbackend.services.user;
 
 import lombok.RequiredArgsConstructor;
 import org.example.eventhubbackend.config.JwtService;

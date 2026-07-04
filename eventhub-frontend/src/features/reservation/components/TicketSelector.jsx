@@ -14,13 +14,13 @@ export default function TicketSelector({
 
     return (
 
-        <div className="space-y-5">
+        <div className="space-y-5 ">
 
             {tickets.map(ticket=>(
 
                 <div
                     key={ticket.id}
-                    className="bg-white shadow rounded-2xl p-5 flex justify-between items-center"
+                    className="bg-white shadow rounded-2xl p-5 flex justify-between items-center dark:bg-indigo-900/40 dark:text-white"
                 >
 
                     <div>

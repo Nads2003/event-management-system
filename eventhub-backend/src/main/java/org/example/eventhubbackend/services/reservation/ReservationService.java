@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
    
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,38 +35,10 @@ public class ReservationService {
     private  final ReservationItemRepository reservationItemRepository;
     private final PaymentRepository paymentRepository;
     @Transactional
-    public Reservation createReservation(
-            Long userId,
-            ReservationRequest request
-    ) {
+    public Reservation createReservation(Long userId, ReservationRequest request) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow();
-
-        Event event = eventRepository.findById(request.getEventId())
-                .orElseThrow();
-
-        Ticket ticket = ticketRepository.findByEventId(request.getTicketId())
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Ticket introuvable"));
-
-
-        // ✅ Vérifier les places disponibles
-        if(ticket.getQuantityAvailable() < request.getQuantity()){
-            throw new RuntimeException("Places insuffisantes");
-        }
-
-        // ✅ Décrémenter les places
-        ticket.setQuantityAvailable(
-                ticket.getQuantityAvailable() - request.getQuantity()
-        );
-
-        ticketRepository.save(ticket);
-
-        // Calcul du montant
-        BigDecimal total = ticket.getPrice()
-                .multiply(BigDecimal.valueOf(request.getQuantity()));
+        User user = userRepository.findById(userId).orElseThrow();
+        Event event = eventRepository.findById(request.getEventId()).orElseThrow();
 
         Reservation reservation = Reservation.builder()
                 .reservationCode(UUID.randomUUID().toString())
@@ -73,33 +46,50 @@ public class ReservationService {
                 .event(event)
                 .status(ReservationStatus.PENDING)
                 .paymentStatus(PaymentStatus.PENDING)
-                .totalAmount(total)
                 .expiresAt(LocalDateTime.now().plusMinutes(15))
                 .build();
-
         reservationRepository.save(reservation);
 
-        ReservationItem item = ReservationItem.builder()
-                .reservation(reservation)
-                .ticket(ticket)
-                .quantity(request.getQuantity())
-                .unitPrice(ticket.getPrice())
-                .subtotal(total)
-                .build();
+        BigDecimal grandTotal = BigDecimal.ZERO;
+        List<ReservationItem> items = new ArrayList<>();
 
-        reservationItemRepository.save(item);
+        for (ReservationRequest.ItemRequest itemReq : request.getItems()) {
 
-        reservation.setItems(List.of(item));
+            Ticket ticket = ticketRepository.findById(itemReq.getTicketId())
+                    .orElseThrow(() -> new RuntimeException("Ticket introuvable"));
+
+            if (ticket.getQuantityAvailable() < itemReq.getQuantity()) {
+                throw new RuntimeException("Places insuffisantes pour le ticket " + ticket.getId());
+            }
+
+            ticket.setQuantityAvailable(ticket.getQuantityAvailable() - itemReq.getQuantity());
+            ticketRepository.save(ticket);
+
+            BigDecimal subtotal = ticket.getPrice().multiply(BigDecimal.valueOf(itemReq.getQuantity()));
+            grandTotal = grandTotal.add(subtotal);
+
+            ReservationItem item = ReservationItem.builder()
+                    .reservation(reservation)
+                    .ticket(ticket)
+                    .quantity(itemReq.getQuantity())
+                    .unitPrice(ticket.getPrice())
+                    .subtotal(subtotal)
+                    .build();
+
+            reservationItemRepository.save(item);
+            items.add(item);
+        }
+
+        reservation.setItems(items);
+        reservation.setTotalAmount(grandTotal);
 
         Payment payment = Payment.builder()
                 .reservation(reservation)
-                .amount(total)
+                .amount(grandTotal)
                 .status(PaymentStatus.PENDING)
                 .method("MVOLA")
                 .build();
-
         paymentRepository.save(payment);
-
         reservation.setPayment(payment);
 
         return reservationRepository.save(reservation);
