@@ -23,7 +23,9 @@ export default function ReservationPage() {
 
     return (
 
-        <div className="max-w-5xl mx-auto pt-28 pb-10 px-5">
+        <div className="min-h-screen pt-28 px-6 lg:px-20 pb-5
+        bg-gradient-to-br from-indigo-50 via-white to-purple-100
+      dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950">
 
             <ReservationHeader event={event} />
 

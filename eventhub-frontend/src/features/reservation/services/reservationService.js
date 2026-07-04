@@ -1,15 +1,18 @@
 import axios from "axios";
 
-const API="http://localhost:8080/api";
+const API = "http://localhost:8080/api";
 
-export const getEvent=(id)=>{
-
-    return axios.get(`${API}/events/${id}`);
-
+const getAuthHeaders = () => {
+    const token = localStorage.getItem("token"); // adaptez selon où vous stockez le token après le login
+    return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-export const createReservation=(data)=>{
+export const getEvent = (id) => {
+    return axios.get(`${API}/events/${id}`);
+};
 
-    return axios.post(`${API}/reservations`,data);
-
+export const createReservation = (data) => {
+    return axios.post(`${API}/reservation`, data, {
+        headers: getAuthHeaders()
+    });
 };

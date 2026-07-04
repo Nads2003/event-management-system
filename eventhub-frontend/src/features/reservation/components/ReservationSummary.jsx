@@ -4,7 +4,7 @@ export default function ReservationSummary({ total }) {
 
     return (
 
-        <div className="mt-8 bg-indigo-50 rounded-2xl p-5">
+        <div className="mt-8 bg-indigo-50 rounded-2xl p-5 dark:bg-indigo-900/40 dark:text-white">
 
             <h2 className="text-2xl font-bold">
 
