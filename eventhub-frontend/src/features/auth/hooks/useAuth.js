@@ -10,19 +10,21 @@ export function useAuth() {
   const [user, setUser] = useState(getAuth());
 
   // 🔐 LOGIN
- const login = async (form) => {
+const login = async (form) => {
   setLoading(true);
 
   try {
-    const { data } = await loginUser(form);
+    const [response] = await Promise.all([
+      loginUser(form),
+      new Promise((resolve) => setTimeout(resolve, 1000)), // minimum 1 seconde
+    ]);
 
-    const { token, role, id } = data;
+    const { token, role, id } = response.data;
 
-    saveAuth(token, role, id); // 🔥 IMPORTANT
+    saveAuth(token, role, id);
     setUser({ token, role, id });
 
     redirectByRole(role);
-
   } finally {
     setLoading(false);
   }

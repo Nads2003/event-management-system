@@ -4,7 +4,7 @@ import { Mail, Lock, Calendar,Eye,EyeOff } from "lucide-react";
 import { useState } from "react";
 
 export default function Login() {
-
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -16,6 +16,7 @@ export default function Login() {
     setForm({ ...form, 
       [e.target.name]: e.target.value 
     });
+    if (error) setError("");
   };
 
 
@@ -23,11 +24,12 @@ const { login, loading } = useAuth();
 
 const handleSubmit = async (e) => {
   e.preventDefault();
+  setError("");
 
   try {
     await login(form);
   } catch (err) {
-    alert(err.response?.data || "Erreur connexion");
+    setError(err.response?.data || "Erreur connexion");
   }
 };
 
@@ -58,6 +60,11 @@ const handleSubmit = async (e) => {
 
         {/* Form */}
         <form className="space-y-5" onSubmit={handleSubmit}>
+        {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl text-sm">
+              {error}
+            </div>
+          )}
           <div className="relative">
             <Mail
               className="absolute left-4 top-4 text-gray-400 dark:text-gray-500"
@@ -108,9 +115,47 @@ const handleSubmit = async (e) => {
             </button>
           </div>
 
-          <button className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-semibold hover:scale-[1.02] transition shadow-lg">
-            Se connecter
-          </button>
+          <button
+  type="submit"
+  disabled={loading}
+  className={`w-full py-4 rounded-2xl font-semibold shadow-lg
+    flex items-center justify-center gap-2
+    transition-all duration-300
+    ${
+      loading
+        ? "bg-indigo-500 cursor-not-allowed"
+        : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:scale-[1.02] text-white"
+    }`}
+>
+  {loading ? (
+    <>
+      <svg
+        className="w-5 h-5 animate-spin"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+        />
+      </svg>
+
+      Connexion...
+    </>
+  ) : (
+    "Se connecter"
+  )}
+</button>
         </form>
 
         <p className="text-center text-gray-600 dark:text-gray-300 mt-6">

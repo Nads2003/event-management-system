@@ -1,11 +1,29 @@
 import { Link } from "react-router-dom";
-import { Menu, X, Calendar, Bell, Plus, ChevronDown, Sun, Moon } from "lucide-react";
+import {
+  Menu,
+  X,
+  Calendar,
+  Bell,
+  Plus,
+  ChevronDown,
+  Sun,
+  Moon,
+  User,
+  Settings,
+  LogOut,
+  CircleUserRound
+} from "lucide-react";
+import { useState } from "react";
 import MobileMenu from "./MobileMenu";
 import { NAV_ITEMS } from "./navbar.data";
 import { useNavbar } from "./navbar.hooks";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+  const [profileOpen, setProfileOpen] = useState(false);
+  const photo = localStorage.getItem("photo");
   const {
     mobileOpen,
     setMobileOpen,
@@ -114,24 +132,85 @@ const handleCreateEvent = () => {
 </div>
 
         {/* ACTIONS */}
-        <div className="hidden lg:flex items-center gap-3 dark:text-white">
+     <div className="hidden lg:flex items-center gap-3 dark:text-white">
 
-          <button onClick={toggleTheme} className="p-2">
-            {darkMode ? <Sun /> : <Moon />}
-          </button>
+  <button onClick={toggleTheme} className="p-2 hover:text-indigo-600">
+    {darkMode ? <Sun /> : <Moon />}
+  </button>
 
-          <Link to="/notifications" className="relative p-2">
-            <Bell />
+  <Link to="/notifications" className="relative p-2 hover:text-indigo-600">
+    <Bell />
+  </Link>
+
+  {token && role === "ORGANIZER" && (
+    <button
+      onClick={handleCreateEvent}
+      className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition"
+    >
+      <Plus size={16} />
+      Créer
+    </button>
+  )}
+
+  {/* Profil */}
+  {token && (
+    <div className="relative">
+
+      <button
+        onClick={() => setProfileOpen(!profileOpen)}
+        className="flex items-center gap-2"
+      >
+        {photo ? (
+          <img
+            src={photo}
+            alt="profil"
+            className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500"
+          />
+        ) : (
+          <CircleUserRound
+            size={38}
+            className="text-gray-500 dark:text-gray-300"
+          />
+        )}
+      </button>
+
+      {profileOpen && (
+        <div className="absolute right-0 mt-3 w-60 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border dark:border-gray-700 overflow-hidden">
+
+          <Link
+            to="/profile"
+            className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <User size={18} />
+            Mon profil
           </Link>
 
-          <button
-           onClick={handleCreateEvent}
-          className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-xl"
+          <Link
+            to="/settings"
+            className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
-            <Plus size={16} />
-              Créer
+            <Settings size={18} />
+            Paramètres
+          </Link>
+
+          <hr className="dark:border-gray-700" />
+
+          <button
+            onClick={() => {
+              localStorage.clear();
+              navigate("/login");
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+          >
+            <LogOut size={18} />
+            Déconnexion
           </button>
+
         </div>
+      )}
+    </div>
+  )}
+</div>
 
         {/* MOBILE BUTTON */}
         <button className="lg:hidden dark:text-white" onClick={() => setMobileOpen(!mobileOpen)}>
