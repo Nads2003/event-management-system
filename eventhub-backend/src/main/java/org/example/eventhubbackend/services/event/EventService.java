@@ -1,10 +1,15 @@
 package org.example.eventhubbackend.services.event;
 
 import lombok.RequiredArgsConstructor;
+import org.example.eventhubbackend.dto.Event.EventMediaResponse;
+import org.example.eventhubbackend.dto.Event.EventResponse;
 import org.example.eventhubbackend.dto.Event.EventUpdateRequest;
+import org.example.eventhubbackend.dto.ticket.TicketResponse;
+import org.example.eventhubbackend.dto.user.OrganizerResponse;
 import org.example.eventhubbackend.entity.event.*;
 import org.example.eventhubbackend.entity.reservation.Reservation;
 import org.example.eventhubbackend.entity.reservation.ReservationStatus;
+import org.example.eventhubbackend.entity.ticket.Ticket;
 import org.example.eventhubbackend.entity.user.User;
 import org.example.eventhubbackend.repository.event.EventRepository;
 import org.example.eventhubbackend.repository.reservation.ReservationRepository;
@@ -15,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -98,12 +104,19 @@ public Event createEvent(
     return eventRepository.save(event);
 }
     //liste de evenement
-    public List<Event> getAllEvents() {
-        return eventRepository.findAllwithMediaAndOrganizer();
+    public List<EventResponse> getAllEvents() {
+
+    return eventRepository.findAllwithMediaAndOrganizer()
+            .stream()
+            .map(this::toEventResponse)
+            .toList();
     }
-    public Event getEventById(Long id) {
-        return eventRepository.findByIdWithDetails(id)
+    public EventResponse getEventById(Long id) {
+
+        Event event = eventRepository.findByIdWithDetails(id)
                 .orElseThrow(() -> new RuntimeException("Événement introuvable"));
+
+        return toEventResponse(event);
     }
     //evenement d'un organisateur
     public List<Event> getEventByOrganizer(Long organizer) {
@@ -174,5 +187,81 @@ public Event createEvent(
         event.setCategory(request.getCategory());
         return  eventRepository.save(event);
 
+    }
+
+    private EventResponse toEventResponse(Event event) {
+
+        return EventResponse.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .description(event.getDescription())
+                .startDate(event.getStartDate())
+                .endDate(event.getEndDate())
+                .city(event.getCity())
+                .address(event.getAddress())
+                .capacity(event.getCapacity())
+                .category(event.getCategory())
+                .type(event.getType())
+                .price(event.getPrice())
+                .status(event.getStatus())
+
+                .organizer(toOrganizerResponse(event.getOrganizer()))
+
+                .media(event.getMedia() == null
+                        ? Collections.emptyList()
+                        : event.getMedia()
+                        .stream()
+                        .map(this::toMediaResponse)
+                        .toList())
+
+                .tickets(
+                        event.getTickets() == null
+                                ? Collections.emptyList()
+                                : event.getTickets()
+                                .stream()
+                                .map(this::toTicketResponse)
+                                .toList()
+                )
+
+                .build();
+    }
+    private OrganizerResponse toOrganizerResponse(User organizer) {
+
+        if (organizer == null) {
+            return null;
+        }
+
+        return OrganizerResponse.builder()
+                .id(organizer.getId())
+                .firstName(organizer.getFirstName())
+                .lastName(organizer.getLastName())
+                .email(organizer.getEmail())
+                .phone(organizer.getPhone())
+                .profilePicture(organizer.getProfilePicture())
+                .build();
+    }
+
+    private EventMediaResponse toMediaResponse(EventMedia media) {
+
+        return EventMediaResponse.builder()
+                .id(media.getId())
+                .url(media.getUrl())
+                .type(media.getType().name())
+                .build();
+    }
+    private TicketResponse toTicketResponse(Ticket ticket) {
+
+        if (ticket == null) {
+            return null;
+        }
+
+        return TicketResponse.builder()
+                .id(ticket.getId())
+                .ticketType(ticket.getType())
+                .description(ticket.getDescription())
+                .price(ticket.getPrice())
+                .quantity(ticket.getQuantity())
+                .quantityAvailable(ticket.getQuantityAvailable())
+                .build();
     }
 }

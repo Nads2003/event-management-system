@@ -12,7 +12,16 @@ export const getEvent = (id) => {
 };
 
 export const createReservation = (data) => {
-    return axios.post(`${API}/reservation`, data, {
-        headers: getAuthHeaders()
-    });
+
+    return axios.post(
+        `${API}/reservation/create`,
+        data,
+        {
+            headers:{
+                ...getAuthHeaders(),
+                "Content-Type":"multipart/form-data"
+            }
+        }
+    );
+
 };

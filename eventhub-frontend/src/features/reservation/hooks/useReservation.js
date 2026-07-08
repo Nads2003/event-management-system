@@ -51,9 +51,9 @@ export function useReservation(id){
 
     },0)||0;
 
-    const reserve=async()=>{
+const reserve=async(payment)=>{
 
-        const items=Object.entries(quantities)
+    const items = Object.entries(quantities)
 
         .filter(([id,q])=>q>0)
 
@@ -65,17 +65,50 @@ export function useReservation(id){
 
         }));
 
-        await createReservation({
 
-            eventId:Number(id),
+    const data = {
 
-            items
+        eventId:Number(id),
 
-        });
+        paymentMethod:payment.paymentMethod,
 
-        alert("Réservation effectuée");
+        items
 
     };
+
+
+    const formData = new FormData();
+
+
+    // JSON avec le bon Content-Type
+    const jsonBlob = new Blob(
+        [
+            JSON.stringify(data)
+        ],
+        {
+            type:"application/json"
+        }
+    );
+
+
+    formData.append(
+        "data",
+        jsonBlob
+    );
+
+
+    formData.append(
+        "proofImage",
+        payment.proofImage
+    );
+
+
+    await createReservation(formData);
+
+
+    alert("Réservation effectuée");
+
+};
 
     return{
 

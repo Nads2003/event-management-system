@@ -1,6 +1,7 @@
 package org.example.eventhubbackend.controllers.event;
 
 import lombok.RequiredArgsConstructor;
+import org.example.eventhubbackend.dto.Event.EventResponse;
 import org.example.eventhubbackend.dto.Event.EventUpdateRequest;
 import org.example.eventhubbackend.entity.event.Event;
 import org.example.eventhubbackend.entity.event.EventType;
@@ -67,11 +68,12 @@ public class EventController {
     }
     //recuperation tous les evenement avec leurs medias et leur organisateur
     @GetMapping
-    public ResponseEntity<List<Event>> getAllEvents() {
+    public ResponseEntity<List<EventResponse>> getAllEvents() {
         return ResponseEntity.ok(eventService.getAllEvents());
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Event> getEventById(@PathVariable Long id) {
+    public ResponseEntity<EventResponse> getEventById(@PathVariable Long id) {
         return ResponseEntity.ok(eventService.getEventById(id));
     }
 

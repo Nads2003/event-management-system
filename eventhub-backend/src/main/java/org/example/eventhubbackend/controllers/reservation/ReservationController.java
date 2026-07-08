@@ -6,10 +6,12 @@ import org.example.eventhubbackend.entity.reservation.Reservation;
 import org.example.eventhubbackend.entity.user.User;
 import org.example.eventhubbackend.services.reservation.ReservationService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -18,18 +20,28 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 public class ReservationController {
     private final ReservationService reservationService;
-    @PostMapping
+    @PostMapping(
+            value="/create",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<?> createReservation(
 
-    public ResponseEntity<?> reserve(
             @AuthenticationPrincipal User user,
-            @RequestBody ReservationRequest request
-    ) {
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Utilisateur non authentifié");
-        }
 
-        Reservation reservation = reservationService.createReservation(user.getId(), request);
-        return ResponseEntity.ok(reservation);
+            @RequestPart("data") ReservationRequest request,
+
+            @RequestPart("proofImage") MultipartFile image
+
+    ){
+
+        request.setProofImage(image);
+
+
+        return ResponseEntity.ok(
+                reservationService.createReservation(
+                        user.getId(),
+                        request
+                )
+        );
     }
 }

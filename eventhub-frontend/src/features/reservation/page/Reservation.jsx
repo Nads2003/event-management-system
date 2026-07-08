@@ -5,10 +5,21 @@ import ReservationHeader from "../components/ReservationHeader";
 import TicketSelector from "../components/TicketSelector";
 import ReservationSummary from "../components/ReservationSummary";
 import ReservationButton from "../components/ReservationButton";
-
+import { useState } from "react";
+import PaymentForm from "../components/PaymentForm";
 export default function ReservationPage() {
 
-    const { id } = useParams();
+        const { id } = useParams();
+
+
+    const [payment,setPayment] = useState({
+
+        paymentMethod:"",
+        proofImage:null
+
+    });
+
+
 
     const {
         event,
@@ -17,6 +28,7 @@ export default function ReservationPage() {
         decrement,
         total,
         reserve
+
     } = useReservation(id);
 
     if (!event) return <p>Chargement...</p>;
@@ -38,9 +50,16 @@ export default function ReservationPage() {
 
             <ReservationSummary total={total} />
 
-            <ReservationButton
-                reserve={reserve}
-            />
+            <PaymentForm
+
+                onChange={setPayment}
+
+                />
+
+           <ReservationButton
+
+               reserve={()=>reserve(payment)}
+          />
 
         </div>
 

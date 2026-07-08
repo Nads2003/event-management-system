@@ -1,4 +1,5 @@
 package org.example.eventhubbackend.entity.ticket;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.eventhubbackend.entity.user.User;
@@ -39,5 +40,6 @@ public class TicketGenerated {
 
     @ManyToOne
     @JoinColumn(name = "checked_by")
+
     private User checkedBy;
 }

@@ -1,4 +1,5 @@
 package org.example.eventhubbackend.entity.event;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.example.eventhubbackend.entity.reservation.Reservation;
@@ -58,5 +59,6 @@ public class Event {
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "event")
+    @JsonIgnore
     private List<Reservation> reservations;
 }
