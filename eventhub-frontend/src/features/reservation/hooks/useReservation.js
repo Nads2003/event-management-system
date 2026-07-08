@@ -109,7 +109,6 @@ const reserve=async(payment)=>{
     alert("Réservation effectuée");
 
 };
-
     return{
 
         event,
