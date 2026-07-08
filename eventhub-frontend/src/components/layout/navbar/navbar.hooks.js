@@ -1,25 +1,11 @@
-import { useState, useEffect } from "react";
+import { useTheme } from "../../../hooks/useTheme";
+import { useState } from "react";
 
 export function useNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [eventDropdown, setEventDropdown] = useState(false);
 
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-
-    localStorage.setItem(
-      "theme",
-      darkMode ? "dark" : "light"
-    );
-  }, [darkMode]);
-
-  const toggleTheme = () => {
-    setDarkMode((prev) => !prev);
-  };
+  const { darkMode, toggleTheme } = useTheme();
 
   return {
     mobileOpen,

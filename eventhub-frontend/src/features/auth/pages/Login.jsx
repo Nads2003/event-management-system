@@ -1,9 +1,11 @@
 import { useAuth } from "../hooks/useAuth";
+import { useTheme } from "../../../hooks/useTheme";
 import { Link } from "react-router-dom";
 import { Mail, Lock, Calendar,Eye,EyeOff } from "lucide-react";
 import { useState } from "react";
 
 export default function Login() {
+    useTheme();
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     email: "",
