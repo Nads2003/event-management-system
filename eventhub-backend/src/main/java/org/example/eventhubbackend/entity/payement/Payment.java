@@ -1,4 +1,5 @@
 package org.example.eventhubbackend.entity.payement;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.eventhubbackend.entity.reservation.Reservation;
@@ -26,6 +27,7 @@ public class Payment {
     private BigDecimal amount;
     private String method;
     private String transactionId;
+    private String proofImage;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
@@ -39,5 +41,6 @@ public class Payment {
 
     @OneToOne
     @JoinColumn(name = "reservation_id")
+    @JsonIgnore
     private Reservation reservation;
 }

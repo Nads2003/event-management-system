@@ -1,4 +1,5 @@
 package org.example.eventhubbackend.entity.reservation;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.eventhubbackend.entity.user.User;
@@ -47,6 +48,7 @@ public class Reservation {
     private LocalDateTime updatedAt;
     @ManyToOne
     @JoinColumn(name = "event_id")
+    @JsonIgnore
     private Event event;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)

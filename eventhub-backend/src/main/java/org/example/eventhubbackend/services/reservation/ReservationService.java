@@ -18,8 +18,13 @@ import org.example.eventhubbackend.repository.ticket.TicketRepository;
 import org.example.eventhubbackend.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-   
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,15 +88,50 @@ public class ReservationService {
         reservation.setItems(items);
         reservation.setTotalAmount(grandTotal);
 
+        String imagePath = saveFile(request.getProofImage());
+
+
         Payment payment = Payment.builder()
                 .reservation(reservation)
                 .amount(grandTotal)
                 .status(PaymentStatus.PENDING)
-                .method("MVOLA")
+                .method(request.getPaymentMethod())
+                .proofImage(imagePath)
                 .build();
         paymentRepository.save(payment);
         reservation.setPayment(payment);
 
         return reservationRepository.save(reservation);
+    }
+
+    private String saveFile(MultipartFile file) {
+
+        try {
+
+            String filename =
+                    UUID.randomUUID()+"_"+file.getOriginalFilename();
+
+
+            Path path = Paths.get("uploads/payments/"+filename);
+
+
+            Files.createDirectories(path.getParent());
+
+
+            Files.copy(
+                    file.getInputStream(),
+                    path,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+
+
+            return "/uploads/payments/"+filename;
+
+
+        } catch(Exception e){
+
+            throw new RuntimeException("Erreur upload image");
+
+        }
     }
 }
