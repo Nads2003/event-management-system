@@ -2,6 +2,7 @@ package org.example.eventhubbackend.controllers.reservation;
 
 import lombok.RequiredArgsConstructor;
 import org.example.eventhubbackend.dto.reservation.ReservationRequest;
+import org.example.eventhubbackend.dto.reservation.ReservationResponse;
 import org.example.eventhubbackend.entity.reservation.Reservation;
 import org.example.eventhubbackend.entity.user.User;
 import org.example.eventhubbackend.services.reservation.ReservationService;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @RestController
@@ -24,7 +27,7 @@ public class ReservationController {
             value="/create",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    public ResponseEntity<?> createReservation(
+    public ResponseEntity<ReservationResponse>  createReservation(
 
             @AuthenticationPrincipal User user,
 
@@ -42,6 +45,15 @@ public class ReservationController {
                         user.getId(),
                         request
                 )
+        );
+    }
+    @GetMapping("/my")
+    public ResponseEntity<List<ReservationResponse>> getMyReservations(
+            @AuthenticationPrincipal User user
+    ){
+
+        return ResponseEntity.ok(
+                reservationService.getMyReservations(user.getId())
         );
     }
 }

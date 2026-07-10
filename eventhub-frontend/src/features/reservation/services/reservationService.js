@@ -25,3 +25,8 @@ export const createReservation = (data) => {
     );
 
 };
+export function getMyReservations(){
+
+    return axios.get("/reservation/my");
+
+}

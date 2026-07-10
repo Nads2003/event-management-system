@@ -64,7 +64,7 @@ const handleCreateEvent = () => {
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center">
             <Calendar className="text-white" />
           </div>
-          <h1 className="font-bold text-xl dark:text-white">EventMaster</h1>
+          <h1 className="font-bold text-xl dark:text-white">EventMada</h1>
         </Link>
 
         {/* DESKTOP MENU */}
