@@ -127,7 +127,7 @@ console.log(events);
         >
           <div className="flex justify-between items-center gap-2">
             <span className="font-bold text-yellow-700 dark:text-yellow-400">
-              {ticket.type} :
+              {ticket.ticketType} :
             </span>
 
             <span className="text-gray-800 dark:text-gray-100">

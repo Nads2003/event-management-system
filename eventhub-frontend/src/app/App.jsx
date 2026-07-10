@@ -8,6 +8,7 @@ import Events from "../features/events/pages/Event";
 import EventDetail from "../features/events/pages/EventDetail";
 import TicketManagement from "../features/ticket/page/TicketManagement";
 import ReservationPage from "../features/reservation/page/Reservation";
+import MyReservations from "../features/reservation/page/MyReservations";
 function App() {
   return (
     <Routes>
@@ -27,6 +28,7 @@ function App() {
                  element={<ReservationPage />}
           />
       </Route>
+      <Route path="/mes-reservations" element={<MyReservations />} />
 
     </Routes>
   );
