@@ -23,10 +23,9 @@ function App() {
         <Route path="/creer-event" element={<OrganizerEvents />}/>
         <Route path="/organizer/events/:id/tickets" element={<TicketManagement />} />
         <Route path="/events/:id" element={<EventDetail />} />
-        <Route
-    path="/events/:id/reservation"
-    element={<ReservationPage />}
-/>
+        <Route path="/events/:id/reservation"
+                 element={<ReservationPage />}
+          />
       </Route>
 
     </Routes>
