@@ -1,17 +1,32 @@
 import axios from "axios";
 
+
 const API = "http://localhost:8080/api";
 
+
 const getAuthHeaders = () => {
-    const token = localStorage.getItem("token"); // adaptez selon où vous stockez le token après le login
-    return token ? { Authorization: `Bearer ${token}` } : {};
+
+    const token = localStorage.getItem("token");
+
+    return token 
+        ? { Authorization:`Bearer ${token}` }
+        : {};
+
 };
 
-export const getEvent = (id) => {
-    return axios.get(`${API}/events/${id}`);
+
+
+export const getEvent = (id)=>{
+
+    return axios.get(
+        `${API}/events/${id}`
+    );
+
 };
 
-export const createReservation = (data) => {
+
+
+export const createReservation = (data)=>{
 
     return axios.post(
         `${API}/reservation/create`,
@@ -25,8 +40,16 @@ export const createReservation = (data) => {
     );
 
 };
-export function getMyReservations(){
 
-    return axios.get("/reservation/my");
 
-}
+
+export const getMyReservations = ()=>{
+
+    return axios.get(
+        `${API}/reservation/my`,
+        {
+            headers:getAuthHeaders()
+        }
+    );
+
+};
