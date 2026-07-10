@@ -16,7 +16,7 @@ export default function Hero({ eventCount }) {
          Plateforme d'événements à Madagascar
         </span>
 
-        <h1 className="text-5xl lg:text-7xl font-extrabold text-gray-900 dark:text-white mb-6">
+        <h1 className="text-4xl lg:text-7xl font-extrabold text-gray-900 dark:text-white mb-6">
           Découvrez les
           <span
             className="block bg-gradient-to-r

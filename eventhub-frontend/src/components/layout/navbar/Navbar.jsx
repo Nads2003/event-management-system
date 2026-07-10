@@ -14,6 +14,7 @@ import {
   CircleUserRound
 } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../../../features/auth/hooks/useAuth";
 import MobileMenu from "./MobileMenu";
 import { NAV_ITEMS } from "./navbar.data";
 import { useNavbar } from "./navbar.hooks";
@@ -22,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 export default function Navbar() {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
+  const { logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const photo = localStorage.getItem("photo");
   const {
@@ -173,7 +175,15 @@ const handleCreateEvent = () => {
           />
         )}
       </button>
-
+       {!token && (
+  <Link
+    to="/login"
+    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600
+    text-white font-medium hover:scale-105 transition-all duration-300 shadow-lg"
+  >
+    Se connecter
+  </Link>
+)}
       {profileOpen && (
         <div className="absolute right-0 mt-3 w-60 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border dark:border-gray-700 overflow-hidden">
 
@@ -196,15 +206,12 @@ const handleCreateEvent = () => {
           <hr className="dark:border-gray-700" />
 
           <button
-            onClick={() => {
-              localStorage.clear();
-              navigate("/login");
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
-          >
-            <LogOut size={18} />
-            Déconnexion
-          </button>
+  onClick={logout}
+  className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+>
+  <LogOut size={18} />
+  Déconnexion
+</button>
 
         </div>
       )}
