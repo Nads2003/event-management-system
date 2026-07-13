@@ -1,6 +1,17 @@
 export default function ReservationCard({reservation}){
 
+    // 1. Dictionnaires de traduction pour les enums
+    const RESERVATION_STATUS_FR = {
+    PENDING: "En attente",
+    CONFIRMED: "Confirmé",
+    CANCELLED: "Annulé"
+}
 
+   const PAYMENT_STATUS_FR = {
+    PENDING: "En attente",
+    PAID: "Payé",
+    FAILED: "Échoué"
+};
     return (
 
         <div className="
@@ -9,7 +20,8 @@ export default function ReservationCard({reservation}){
             shadow-md 
             p-5
             border
-        ">
+         dark:bg-gray-900/80 text-gray-300">
+
 
 
             <div className="flex justify-between">
@@ -26,7 +38,7 @@ export default function ReservationCard({reservation}){
                     bg-yellow-100
                     text-yellow-700
                 ">
-                    {reservation.status}
+                    {RESERVATION_STATUS_FR[reservation.status] || reservation.status}
                 </span>
 
 
@@ -34,7 +46,7 @@ export default function ReservationCard({reservation}){
 
 
 
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 mt-2 dark:text-gray-300">
 
                 Code réservation :
                 <b>
@@ -104,7 +116,7 @@ export default function ReservationCard({reservation}){
                         <p>
                             Paiement :
                             <b>
-                                {reservation.payment.status}
+                                 {PAYMENT_STATUS_FR[reservation.payment.status] || reservation.payment.status}
                             </b>
                         </p>
 

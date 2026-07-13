@@ -27,8 +27,9 @@ function App() {
         <Route path="/events/:id/reservation"
                  element={<ReservationPage />}
           />
+        <Route path="/mes-reservations" element={<MyReservations />} />
       </Route>
-      <Route path="/mes-reservations" element={<MyReservations />} />
+      
 
     </Routes>
   );
