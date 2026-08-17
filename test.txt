@@ -1,2 +1,4 @@
 organizer@test.com
 123456
+adelin@gmail.com
+adelin
