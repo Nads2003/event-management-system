@@ -1,6 +1,7 @@
 package org.example.eventhubbackend.repository.event;
 
 import org.example.eventhubbackend.entity.event.Event;
+import org.example.eventhubbackend.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +19,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllwithMediaAndOrganizer();
 
     List<Event> findByOrganizerId(Long organizerId);
+    // Méthode pour trouver les événements d'un organisateur
+    List<Event> findByOrganizer(User organizer);
     @Query("""
     SELECT DISTINCT e
     FROM Event e
