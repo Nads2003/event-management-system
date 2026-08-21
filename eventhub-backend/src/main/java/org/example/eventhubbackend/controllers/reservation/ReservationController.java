@@ -47,13 +47,32 @@ public class ReservationController {
                 )
         );
     }
-    @GetMapping("/my")
-    public ResponseEntity<List<ReservationResponse>> getMyReservations(
-            @AuthenticationPrincipal User user
-    ){
+    // Dans ReservationController
 
-        return ResponseEntity.ok(
-                reservationService.getMyReservations(user.getId())
-        );
+    @GetMapping("/my-reservations")
+    public ResponseEntity<List<ReservationResponse>> getMyReservations(
+            @AuthenticationPrincipal User user,
+            @RequestParam(defaultValue = "USER") String role) {
+
+        List<ReservationResponse> reservations = reservationService.getReservationsForUser(user.getId(), role);
+        return ResponseEntity.ok(reservations);
+    }
+
+    @PutMapping("/{reservationId}/validate")
+    public ResponseEntity<ReservationResponse> validateReservation(
+            @PathVariable Long reservationId,
+            @AuthenticationPrincipal User user) {
+
+        ReservationResponse response = reservationService.validateReservation(reservationId, user.getId());
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{reservationId}/cancel")
+    public ResponseEntity<ReservationResponse> cancelReservation(
+            @PathVariable Long reservationId,
+            @AuthenticationPrincipal User user) {
+
+        ReservationResponse response = reservationService.cancelReservation(reservationId, user.getId());
+        return ResponseEntity.ok(response);
     }
 }

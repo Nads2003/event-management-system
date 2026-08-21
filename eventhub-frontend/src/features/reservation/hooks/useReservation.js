@@ -1,276 +1,72 @@
-import { useEffect,useState } from "react";
+import { useState, useEffect } from 'react';
+import { getMyReservations, validateReservation, cancelReservation } from '../services/reservationService';
 
-import {
-    getEvent,
-    createReservation,
-    getMyReservations
+export function useReservation(isOrganizer = false) {
+    const [reservations, setReservations] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-} from "../services/reservationService";
-
-
-
-export function useReservation(id){
-
-
-    // réservation liste
-
-    const [reservations,setReservations] = useState([]);
-
-    const [loading,setLoading] = useState(true);
-
-    const [error,setError] = useState(null);
-
-
-
-    // création réservation
-
-    const [event,setEvent] = useState(null);
-
-    const [quantities,setQuantities] = useState({});
-
-
-
-
-    // récupérer event
-
-    useEffect(()=>{
-
-
-        if(!id) return;
-
-
-        getEvent(id)
-
-        .then(res=>{
-
-            setEvent(res.data);
-
-        })
-
-        .catch(err=>{
-
-            console.log(err);
-
-        });
-
-
-    },[id]);
-
-
-
-
-    // récupérer mes réservations
-
-    useEffect(()=>{
-
-
-        async function loadReservations(){
-
-
-            try {
-
-
-                const response = await getMyReservations();
-
-
-                setReservations(response.data);
-
-
-
-            }catch(err){
-
-
-                setError(err);
-
-
-            }finally{
-
-
-                setLoading(false);
-
-
-            }
-
+    const fetchReservations = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const role = isOrganizer ? 'ORGANIZER' : 'USER';
+            const response = await getMyReservations(role);
+            setReservations(response.data);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Erreur lors du chargement des réservations');
+            console.error('Error fetching reservations:', err);
+        } finally {
+            setLoading(false);
         }
-
-
-
-        loadReservations();
-
-
-    },[]);
-
-
-
-
-
-
-    const increment=(ticketId)=>{
-
-
-        setQuantities(prev=>({
-
-            ...prev,
-
-            [ticketId]:(prev[ticketId] || 0)+1
-
-        }));
-
     };
 
+    useEffect(() => {
+        fetchReservations();
+    }, [isOrganizer]);
 
-
-
-
-    const decrement=(ticketId)=>{
-
-
-        setQuantities(prev=>({
-
-            ...prev,
-
-            [ticketId]:Math.max(
-                (prev[ticketId] || 0)-1,
-                0
-            )
-
-        }));
-
+    const handleValidateReservation = async (reservationId) => {
+        try {
+            setLoading(true);
+            const response = await validateReservation(reservationId);
+            // Mettre à jour la liste des réservations
+            setReservations(prev => 
+                prev.map(r => r.id === reservationId ? response.data : r)
+            );
+            return response.data;
+        } catch (err) {
+            setError(err.response?.data?.message || 'Erreur lors de la validation');
+            console.error('Error validating reservation:', err);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
     };
 
-
-
-
-
-
-    const total = event?.tickets?.reduce((sum,t)=>{
-
-
-        return sum + 
-        Number(t.price) *
-        (quantities[t.id] || 0);
-
-
-    },0) || 0;
-
-
-
-
-
-
-    const reserve = async(payment)=>{
-
-
-        const items = Object.entries(quantities)
-
-        .filter(([id,q])=>q>0)
-
-        .map(([ticketId,quantity])=>({
-
-
-            ticketId:Number(ticketId),
-
-            quantity
-
-
-        }));
-
-
-
-
-        const data={
-
-
-            eventId:Number(id),
-
-            paymentMethod:payment.paymentMethod,
-
-            items
-
-
-        };
-
-
-
-
-        const formData = new FormData();
-
-
-
-        formData.append(
-
-            "data",
-
-            new Blob(
-
-                [
-                    JSON.stringify(data)
-                ],
-
-                {
-                    type:"application/json"
-                }
-
-            )
-
-        );
-
-
-
-        formData.append(
-
-            "proofImage",
-
-            payment.proofImage
-
-        );
-
-
-
-
-        await createReservation(formData);
-
-
-
-        alert("Réservation effectuée");
-
-
+    const handleCancelReservation = async (reservationId) => {
+        try {
+            setLoading(true);
+            const response = await cancelReservation(reservationId);
+            // Mettre à jour la liste des réservations
+            setReservations(prev => 
+                prev.map(r => r.id === reservationId ? response.data : r)
+            );
+            return response.data;
+        } catch (err) {
+            setError(err.response?.data?.message || 'Erreur lors de l\'annulation');
+            console.error('Error canceling reservation:', err);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
     };
 
-
-
-
-
-
-
-    return{
-
-
-        // liste
-
+    return {
         reservations,
-
         loading,
-
         error,
-
-
-        // création
-
-        event,
-
-        quantities,
-
-        increment,
-
-        decrement,
-
-        total,
-
-        reserve
-
-
+        validateReservation: handleValidateReservation,
+        cancelReservation: handleCancelReservation,
+        refreshReservations: fetchReservations
     };
-
-
 }

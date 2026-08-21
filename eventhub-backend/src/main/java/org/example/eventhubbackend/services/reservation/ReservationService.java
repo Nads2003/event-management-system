@@ -47,6 +47,7 @@ public class ReservationService {
     private  final TicketRepository ticketRepository;
     private  final ReservationItemRepository reservationItemRepository;
     private final PaymentRepository paymentRepository;
+    // faire de reservation
     @Transactional
     public ReservationResponse createReservation(Long userId, ReservationRequest request) {
 
@@ -113,7 +114,7 @@ public class ReservationService {
 
         return toReservationResponse(savedReservation);
     }
-
+//enregistre la preuve de paiement
     private String saveFile(MultipartFile file) {
 
         try {
@@ -146,7 +147,6 @@ public class ReservationService {
     }
 
     private ReservationResponse toReservationResponse(Reservation reservation) {
-
         return ReservationResponse.builder()
                 .id(reservation.getId())
                 .reservationCode(reservation.getReservationCode())
@@ -155,21 +155,32 @@ public class ReservationService {
                 .paymentStatus(reservation.getPaymentStatus())
                 .createdAt(reservation.getCreatedAt())
                 .expiresAt(reservation.getExpiresAt())
-
+                // Ajouter l'utilisateur
+                .user(toUserResponse(reservation.getUser()))
                 .event(toEventResponse(reservation.getEvent()))
-
                 .payment(toPaymentResponse(reservation.getPayment()))
-
                 .items(
                         reservation.getItems()
                                 .stream()
                                 .map(this::toReservationItemResponse)
                                 .toList()
                 )
-
                 .build();
     }
 
+    // Ajouter cette méthode pour convertir User en UserResponse
+    private OrganizerResponse toUserResponse(User user) {
+        if (user == null) return null;
+
+        return OrganizerResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .profilePicture(user.getProfilePicture())
+                .build();
+    }
     private EventResponse toEventResponse(Event event) {
 
         if (event == null) return null;
@@ -266,7 +277,7 @@ public class ReservationService {
                 .ticket(toTicketResponse(item.getTicket()))
                 .build();
     }
-
+//Liste de reservation de chaque utilisateur
     @Transactional(readOnly = true)
     public List<ReservationResponse> getMyReservations(Long userId) {
 
@@ -279,5 +290,108 @@ public class ReservationService {
         return reservations.stream()
                 .map(this::toReservationResponse)
                 .toList();
+    }
+    // Ajoutez ces méthodes dans ReservationService
+
+    @Transactional(readOnly = true)
+    public List<ReservationResponse> getReservationsForUser(Long userId, String role) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        if ("ORGANIZER".equalsIgnoreCase(role)) {
+            // Pour un organisateur, récupérer toutes les réservations de ses événements
+            return getReservationsByOrganizer(userId);
+        } else {
+            // Pour un utilisateur normal, récupérer ses propres réservations
+            return getMyReservations(userId);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReservationResponse> getReservationsByOrganizer(Long organizerId) {
+        User organizer = userRepository.findById(organizerId)
+                .orElseThrow(() -> new RuntimeException("Organisateur introuvable"));
+
+        // Récupérer tous les événements de l'organisateur
+        List<Event> events = eventRepository.findByOrganizer(organizer);
+
+        if (events.isEmpty()) {
+            return List.of();
+        }
+
+        // Récupérer toutes les réservations pour ces événements
+        List<Reservation> reservations = reservationRepository.findByEventIn(events);
+
+        return reservations.stream()
+                .map(this::toReservationResponse)
+                .toList();
+    }
+
+    // Méthode pour valider une réservation (Organizer)
+    @Transactional
+    public ReservationResponse validateReservation(Long reservationId, Long organizerId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("Réservation introuvable"));
+
+        // Vérifier que l'organisateur est bien le propriétaire de l'événement
+        if (!reservation.getEvent().getOrganizer().getId().equals(organizerId)) {
+            throw new RuntimeException("Vous n'avez pas le droit de modifier cette réservation");
+        }
+
+        // Vérifier que la réservation est en attente
+        if (reservation.getStatus() != ReservationStatus.PENDING) {
+            throw new RuntimeException("Cette réservation ne peut pas être validée");
+        }
+
+        // Valider la réservation
+        reservation.setStatus(ReservationStatus.CONFIRMED);
+        reservation.setPaymentStatus(PaymentStatus.PAID);
+
+        // Mettre à jour le paiement si existant
+        if (reservation.getPayment() != null) {
+            reservation.getPayment().setStatus(PaymentStatus.PAID);
+            reservation.getPayment().setPaidAt(LocalDateTime.now());
+            paymentRepository.save(reservation.getPayment());
+        }
+
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return toReservationResponse(savedReservation);
+    }
+
+    // Méthode pour refuser une réservation (Organizer)
+    @Transactional
+    public ReservationResponse cancelReservation(Long reservationId, Long organizerId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("Réservation introuvable"));
+
+        // Vérifier que l'organisateur est bien le propriétaire de l'événement
+        if (!reservation.getEvent().getOrganizer().getId().equals(organizerId)) {
+            throw new RuntimeException("Vous n'avez pas le droit de modifier cette réservation");
+        }
+
+        // Vérifier que la réservation est en attente
+        if (reservation.getStatus() != ReservationStatus.PENDING) {
+            throw new RuntimeException("Cette réservation ne peut pas être annulée");
+        }
+
+        // Refuser la réservation
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservation.setPaymentStatus(PaymentStatus.FAILED);
+
+        // Mettre à jour le paiement si existant
+        if (reservation.getPayment() != null) {
+            reservation.getPayment().setStatus(PaymentStatus.FAILED);
+            paymentRepository.save(reservation.getPayment());
+        }
+
+        // Rendre les tickets disponibles à nouveau
+        for (ReservationItem item : reservation.getItems()) {
+            Ticket ticket = item.getTicket();
+            ticket.setQuantityAvailable(ticket.getQuantityAvailable() + item.getQuantity());
+            ticketRepository.save(ticket);
+        }
+
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return toReservationResponse(savedReservation);
     }
 }

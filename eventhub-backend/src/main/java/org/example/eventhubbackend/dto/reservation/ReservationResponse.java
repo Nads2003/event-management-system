@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.example.eventhubbackend.dto.Event.EventMediaResponse;
 import org.example.eventhubbackend.dto.Event.EventResponse;
 import org.example.eventhubbackend.dto.payement.PaymentResponse;
+import org.example.eventhubbackend.dto.user.OrganizerResponse;
 import org.example.eventhubbackend.entity.payement.PaymentStatus;
 import org.example.eventhubbackend.entity.reservation.ReservationStatus;
 
@@ -33,6 +34,8 @@ public class ReservationResponse {
     private LocalDateTime createdAt;
 
     private LocalDateTime expiresAt;
+    // Ajouter l'utilisateur
+    private OrganizerResponse user;
 
     private EventResponse event;
 
