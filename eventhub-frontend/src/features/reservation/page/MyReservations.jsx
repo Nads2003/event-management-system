@@ -1,19 +1,35 @@
-import { useState } from 'react';
+// reservation/page/MyReservations.jsx
+import { useState, useEffect } from 'react';
 import ReservationList from "../components/ReservationList";
 import { useReservation } from "../hooks/useReservation";
-import { useAuth } from "../hooks/useAuth"; // Assurez-vous d'avoir ce hook
+// 👇 IMPORTANT: Utiliser le hook de auth, pas de reservation
+import { useAuth } from "../../auth/hooks/useAuth";
+import { getAuth } from "../../auth/utils/auth.storage";
 
 export default function MyReservations() {
-    const { user } = useAuth(); // Récupérer l'utilisateur connecté
-    const isOrganizer = user?.role === 'ORGANIZER';
-    console.log(isOrganizer)
+    // Utiliser le hook de auth
+    const { user, loading: authLoading } = useAuth();
+    
+    // Ajouter des logs pour debug
+    useEffect(() => {
+        console.log('🔍 MyReservations - User:', user);
+        console.log('🔍 MyReservations - User role:', user?.role);
+        console.log('🔍 MyReservations - IsOrganizer:', user?.role === 'ORGANIZER');
+        console.log('🔍 MyReservations - localStorage role:', localStorage.getItem('role'));
+    }, [user]);
+    
+    // Vérifier si l'utilisateur est organisateur
+    // Utiliser à la fois le user du hook et le localStorage directement
+    const isOrganizer = user?.role === 'ORGANIZER' || localStorage.getItem('role') === 'ORGANIZER';
+    
+    console.log('📌 Final isOrganizer:', isOrganizer);
     
     const [validatingId, setValidatingId] = useState(null);
     const [cancelingId, setCancelingId] = useState(null);
 
     const {
         reservations,
-        loading,
+        loading: reservationsLoading,
         error,
         validateReservation,
         cancelReservation,
@@ -24,9 +40,7 @@ export default function MyReservations() {
         setValidatingId(reservationId);
         try {
             await validateReservation(reservationId);
-            // Optionnel: afficher une notification de succès
         } catch (err) {
-            // Optionnel: afficher une notification d'erreur
             console.error('Validation failed:', err);
         } finally {
             setValidatingId(null);
@@ -37,16 +51,15 @@ export default function MyReservations() {
         setCancelingId(reservationId);
         try {
             await cancelReservation(reservationId);
-            // Optionnel: afficher une notification de succès
         } catch (err) {
-            // Optionnel: afficher une notification d'erreur
             console.error('Cancellation failed:', err);
         } finally {
             setCancelingId(null);
         }
     };
 
-    if (loading) {
+    // Afficher le chargement si auth ou reservations sont en chargement
+    if (authLoading || reservationsLoading) {
         return (
             <div className="min-h-screen pt-28 px-6 lg:px-20 pb-5 flex items-center justify-center">
                 <div className="text-center">

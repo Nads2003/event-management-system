@@ -1,3 +1,7 @@
+// components/ReservationCard.js
+import { useState } from 'react';
+import ImageModal from './ImageModal';
+
 export default function ReservationCard({ 
     reservation, 
     isOrganizer = false, 
@@ -6,6 +10,10 @@ export default function ReservationCard({
     validating = false,
     canceling = false
 }) {
+    const [showProofImage, setShowProofImage] = useState(false);
+ 
+    const [showModal, setShowModal] = useState(false);
+    
     const RESERVATION_STATUS_FR = {
         PENDING: "En attente",
         CONFIRMED: "Confirmé",
@@ -52,6 +60,17 @@ export default function ReservationCard({
 
     const isPending = reservation.status === 'PENDING';
     const isBeingProcessed = validating || canceling;
+    
+    // Construire l'URL complète de l'image
+     const getImageUrl = (imagePath) => {
+        if (!imagePath) return null;
+        if (imagePath.startsWith('http')) return imagePath;
+        return `http://localhost:8080${imagePath}`;
+    };
+
+    const proofImageUrl = reservation.payment?.proofImage 
+        ? getImageUrl(reservation.payment.proofImage) 
+        : null;
 
     return (
         <div className="
@@ -258,8 +277,68 @@ export default function ReservationCard({
                             {PAYMENT_STATUS_FR[reservation.payment.status] || reservation.payment.status}
                         </span>
                     </div>
-                </div>
+                    
+                    {/* Méthode de paiement */}
+                    {reservation.payment.method && (
+                        <div className="mt-2 flex items-center gap-2">
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                                Méthode:
+                            </span>
+                            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                                {reservation.payment.method}
+                            </span>
+                        </div>
+                    )}
+
+                    {/* Preuve de paiement - Image */}
+                     {proofImageUrl && (
+                    <div className="mt-3">
+                        <button
+                            onClick={() => setShowProofImage(!showProofImage)}
+                            className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+                        >
+                            {showProofImage ? 'Cacher' : 'Voir'} la preuve de paiement
+                        </button>
+                        
+                        {showProofImage && (
+                            <div className="mt-3 relative">
+                                <img
+                                    src={proofImageUrl}
+                                    alt="Preuve de paiement"
+                                    className="
+                                        w-full
+                                        max-h-48
+                                        object-contain
+                                        rounded-lg
+                                        border
+                                        border-gray-200
+                                        dark:border-gray-700
+                                        cursor-pointer
+                                        hover:opacity-90
+                                        transition-opacity
+                                    "
+                                    onClick={() => setShowModal(true)}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = '/placeholder-image.png';
+                                        e.target.alt = 'Image non disponible';
+                                    }}
+                                />
+                                <span className="absolute bottom-2 right-2 text-xs bg-black/50 text-white px-2 py-1 rounded">
+                                    Cliquez pour agrandir
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
             )}
+              {/* Modal pour agrandir l'image */}
+            <ImageModal
+                isOpen={showModal}
+                imageUrl={proofImageUrl}
+                onClose={() => setShowModal(false)}
+            />
 
             {/* ACTIONS POUR ORGANISATEUR */}
             {isOrganizer && isPending && (
