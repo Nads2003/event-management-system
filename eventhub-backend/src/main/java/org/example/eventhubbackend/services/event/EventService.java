@@ -14,6 +14,7 @@ import org.example.eventhubbackend.entity.user.User;
 import org.example.eventhubbackend.repository.event.EventRepository;
 import org.example.eventhubbackend.repository.reservation.ReservationRepository;
 import org.example.eventhubbackend.repository.user.UserRepository;
+import org.example.eventhubbackend.services.notification.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +32,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
+    private final NotificationService notificationService;
 // insertion d'un evenement
 public Event createEvent(
         String title,
@@ -101,7 +103,10 @@ public Event createEvent(
 
     event.setMedia(medias);
 
-    return eventRepository.save(event);
+    Event savedEvent = eventRepository.save(event);
+    notificationService.notifyEventCreated(savedEvent); // ⬅️ AJOUT
+
+    return savedEvent;
 }
     //liste de evenement
     public List<EventResponse> getAllEvents() {

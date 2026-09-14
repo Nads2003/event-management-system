@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   getNotifications,
+  getCurrentUserId,
   markAsRead as markAsReadApi,
   markAllAsRead as markAllAsReadApi,
   deleteNotification,
@@ -10,9 +11,16 @@ export function useNotifications() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState("all"); // all | unread
+  const [filter, setFilter] = useState("all");
 
   const fetchNotifications = useCallback(async () => {
+    const userId = getCurrentUserId();
+    if (!userId) {
+      setNotifications([]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -31,9 +39,7 @@ export function useNotifications() {
   }, [fetchNotifications]);
 
   const markAsRead = async (id) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-    );
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
     try {
       await markAsReadApi(id);
     } catch {
@@ -64,15 +70,8 @@ export function useNotifications() {
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   return {
-    notifications,
-    loading,
-    error,
-    filter,
-    setFilter,
-    unreadCount,
-    markAsRead,
-    markAllAsRead,
-    removeNotification,
+    notifications, loading, error, filter, setFilter,
+    unreadCount, markAsRead, markAllAsRead, removeNotification,
     refetch: fetchNotifications,
   };
 }
