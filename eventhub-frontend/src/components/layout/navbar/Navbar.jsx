@@ -155,27 +155,45 @@ const handleCreateEvent = () => {
   )}
 
   {/* Profil */}
-  {token && (
-    <div className="relative">
+{token ? (
+  <div className="relative">
+    <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-2">
+      {photo ? (
+        <img
+          src={photo}
+          alt="profil"
+          className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500"
+        />
+      ) : (
+        <CircleUserRound size={38} className="text-gray-500 dark:text-gray-300" />
+      )}
+    </button>
 
-      <button
-        onClick={() => setProfileOpen(!profileOpen)}
-        className="flex items-center gap-2"
-      >
-        {photo ? (
-          <img
-            src={photo}
-            alt="profil"
-            className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500"
-          />
-        ) : (
-          <CircleUserRound
-            size={38}
-            className="text-gray-500 dark:text-gray-300"
-          />
-        )}
-      </button>
-       {!token && (
+    {profileOpen && (
+      <div className="absolute right-0 mt-3 w-60 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border dark:border-gray-700 overflow-hidden">
+        <Link to="/profile" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700">
+          <User size={18} />
+          Mon profil
+        </Link>
+
+        <Link to="/settings" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700">
+          <Settings size={18} />
+          Paramètres
+        </Link>
+
+        <hr className="dark:border-gray-700" />
+
+        <button
+          onClick={logout}
+          className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+        >
+          <LogOut size={18} />
+          Déconnexion
+        </button>
+      </div>
+    )}
+  </div>
+) : (
   <Link
     to="/login"
     className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600
@@ -184,39 +202,6 @@ const handleCreateEvent = () => {
     Se connecter
   </Link>
 )}
-      {profileOpen && (
-        <div className="absolute right-0 mt-3 w-60 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border dark:border-gray-700 overflow-hidden">
-
-          <Link
-            to="/profile"
-            className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            <User size={18} />
-            Mon profil
-          </Link>
-
-          <Link
-            to="/settings"
-            className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            <Settings size={18} />
-            Paramètres
-          </Link>
-
-          <hr className="dark:border-gray-700" />
-
-          <button
-  onClick={logout}
-  className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
->
-  <LogOut size={18} />
-  Déconnexion
-</button>
-
-        </div>
-      )}
-    </div>
-  )}
 </div>
 
         {/* MOBILE BUTTON */}
