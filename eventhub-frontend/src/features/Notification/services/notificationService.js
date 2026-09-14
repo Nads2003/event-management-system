@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getAuth } from "../../auth/utils/auth.storage"; // ⚠️ adaptez le chemin relatif si besoin
 
 const API = "http://localhost:8080/api/notifications";
 
@@ -8,15 +9,25 @@ const authHeader = () => ({
   },
 });
 
+export const getCurrentUserId = () => {
+  const authData = getAuth();
+  return authData?.id ?? null;
+};
+
 export const getNotifications = (params = {}) => {
+  const userId = getCurrentUserId();
   return axios.get(API, {
     ...authHeader(),
-    params,
+    params: { userId, ...params },
   });
 };
 
 export const getUnreadCount = () => {
-  return axios.get(`${API}/unread-count`, authHeader());
+  const userId = getCurrentUserId();
+  return axios.get(`${API}/unread-count`, {
+    ...authHeader(),
+    params: { userId },
+  });
 };
 
 export const markAsRead = (id) => {
@@ -24,7 +35,11 @@ export const markAsRead = (id) => {
 };
 
 export const markAllAsRead = () => {
-  return axios.patch(`${API}/read-all`, null, authHeader());
+  const userId = getCurrentUserId();
+  return axios.patch(`${API}/read-all`, null, {
+    ...authHeader(),
+    params: { userId },
+  });
 };
 
 export const deleteNotification = (id) => {

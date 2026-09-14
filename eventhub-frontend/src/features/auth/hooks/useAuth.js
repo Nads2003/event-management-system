@@ -127,7 +127,7 @@ export function useAuth() {
     console.log('🚪 useAuth - Logging out');
     clearAuth();
     setUser(null);
-    navigate("/login");
+    navigate("/");
   };
 
   // 🎯 helper propre

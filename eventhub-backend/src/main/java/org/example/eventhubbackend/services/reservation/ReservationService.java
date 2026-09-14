@@ -24,6 +24,7 @@ import org.example.eventhubbackend.repository.reservation.ReservationItemReposit
 import org.example.eventhubbackend.repository.reservation.ReservationRepository;
 import org.example.eventhubbackend.repository.ticket.TicketRepository;
 import org.example.eventhubbackend.repository.user.UserRepository;
+import org.example.eventhubbackend.services.notification.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +48,7 @@ public class ReservationService {
     private  final TicketRepository ticketRepository;
     private  final ReservationItemRepository reservationItemRepository;
     private final PaymentRepository paymentRepository;
+    private  final NotificationService notificationService;
     // faire de reservation
     @Transactional
     public ReservationResponse createReservation(Long userId, ReservationRequest request) {
@@ -111,7 +113,7 @@ public class ReservationService {
         reservation.setPayment(payment);
 
         Reservation savedReservation = reservationRepository.save(reservation);
-
+        notificationService.notifyReservationCreated(savedReservation);
         return toReservationResponse(savedReservation);
     }
 //enregistre la preuve de paiement
@@ -355,6 +357,7 @@ public class ReservationService {
         }
 
         Reservation savedReservation = reservationRepository.save(reservation);
+        notificationService.notifyReservationValidated(savedReservation);
         return toReservationResponse(savedReservation);
     }
 
@@ -392,6 +395,7 @@ public class ReservationService {
         }
 
         Reservation savedReservation = reservationRepository.save(reservation);
+        notificationService.notifyReservationCancelled(savedReservation);
         return toReservationResponse(savedReservation);
     }
 }

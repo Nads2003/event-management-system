@@ -7,6 +7,7 @@ import {
   X,
 } from "lucide-react";
 import { formatRelativeTime } from "../utils/notificationHelpers";
+import { useNavigate } from "react-router-dom";
 
 const ICONS = {
   event: Calendar,
@@ -25,12 +26,32 @@ const COLOR_STYLES = {
 };
 
 export default function NotificationItem({ notification, onMarkAsRead, onRemove }) {
+  const navigate = useNavigate();
   const Icon = ICONS[notification.type] || Info;
   const colorClass = COLOR_STYLES[notification.type] || COLOR_STYLES.system;
 
+  const handleClick = () => {
+    if (!notification.read) onMarkAsRead(notification.id);
+
+    switch (notification.type) {
+      case "EVENT_CREATED":
+        navigate(`/events/${notification.event?.id}`);
+        break;
+      case "RESERVATION_CREATED":
+        navigate(`/mes-events`); // organizer va voir ses réservations en attente
+        break;
+      case "RESERVATION_VALIDATED":
+      case "RESERVATION_CANCELLED":
+        navigate(`/mes-reservations`); // user va voir le statut de sa réservation
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <div
-      onClick={() => !notification.read && onMarkAsRead(notification.id)}
+      onClick={handleClick}
       className={`group relative flex gap-4 rounded-2xl border p-4 transition-all duration-200 cursor-pointer
         ${
           notification.read
