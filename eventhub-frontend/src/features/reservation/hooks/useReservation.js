@@ -1,73 +1,52 @@
-//reservation/hooks/useReservation.js
-import { useState, useEffect } from 'react';
-import { getMyReservations, validateReservation, cancelReservation } from '../services/reservationService';
+// hooks/useReservation.js
+import { useState, useEffect } from "react";
+import { getEvent, createReservation } from "../services/reservationService";
 
-export function useReservation(isOrganizer = false) {
-    const [reservations, setReservations] = useState([]);
+export function useReservation(eventId) {
+    const [event, setEvent] = useState(null);
+    const [quantities, setQuantities] = useState({});
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    const fetchReservations = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            const role = isOrganizer ? 'ORGANIZER' : 'USER';
-            const response = await getMyReservations(role);
-            setReservations(response.data);
-        } catch (err) {
-            setError(err.response?.data?.message || 'Erreur lors du chargement des réservations');
-            console.error('Error fetching reservations:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
-        fetchReservations();
-    }, [isOrganizer]);
+        getEvent(eventId)
+            .then((res) => setEvent(res.data))
+            .catch((err) => console.error(err))
+            .finally(() => setLoading(false));
+    }, [eventId]);
 
-    const handleValidateReservation = async (reservationId) => {
-        try {
-            setLoading(true);
-            const response = await validateReservation(reservationId);
-            // Mettre à jour la liste des réservations
-            setReservations(prev => 
-                prev.map(r => r.id === reservationId ? response.data : r)
-            );
-            return response.data;
-        } catch (err) {
-            setError(err.response?.data?.message || 'Erreur lors de la validation');
-            console.error('Error validating reservation:', err);
-            throw err;
-        } finally {
-            setLoading(false);
-        }
+    const increment = (ticketId) =>
+        setQuantities((q) => ({ ...q, [ticketId]: (q[ticketId] || 0) + 1 }));
+
+    const decrement = (ticketId) =>
+        setQuantities((q) => ({ ...q, [ticketId]: Math.max((q[ticketId] || 0) - 1, 0) }));
+
+    const total = event?.tickets?.reduce(
+        (sum, t) => sum + (quantities[t.id] || 0) * t.price,
+        0
+    ) || 0;
+
+    const reserve = async (payment) => {
+    const items = Object.entries(quantities)
+        .filter(([, qty]) => qty > 0)
+        .map(([ticketId, quantity]) => ({ ticketId: Number(ticketId), quantity }));
+
+    const data = {
+        eventId: Number(eventId),
+        items,
+        paymentMethod: payment.paymentMethod,
     };
 
-    const handleCancelReservation = async (reservationId) => {
-        try {
-            setLoading(true);
-            const response = await cancelReservation(reservationId);
-            // Mettre à jour la liste des réservations
-            setReservations(prev => 
-                prev.map(r => r.id === reservationId ? response.data : r)
-            );
-            return response.data;
-        } catch (err) {
-            setError(err.response?.data?.message || 'Erreur lors de l\'annulation');
-            console.error('Error canceling reservation:', err);
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-    };
+    const formData = new FormData();
+    formData.append(
+        "data",
+        new Blob([JSON.stringify(data)], { type: "application/json" })
+    );
+    if (payment.proofImage) {
+        formData.append("proofImage", payment.proofImage);
+    }
 
-    return {
-        reservations,
-        loading,
-        error,
-        validateReservation: handleValidateReservation,
-        cancelReservation: handleCancelReservation,
-        refreshReservations: fetchReservations
-    };
+    return createReservation(formData);
+};
+
+    return { event, quantities, increment, decrement, total, reserve, loading };
 }

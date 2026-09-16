@@ -28,7 +28,9 @@ export default function PaymentForm({ onChange }) {
 
     return (
         <div className="mt-8 bg-white rounded-2xl shadow p-6
-            dark:bg-indigo-900/40 dark:text-white">
+            dark:bg-gray-900
+            text-gray-800
+            dark:text-gray-100">
 
             <h2 className="text-2xl font-bold mb-4">
                 Paiement
@@ -98,9 +100,9 @@ export default function PaymentForm({ onChange }) {
                     file:px-4
                     file:rounded-lg
                     file:border-0
-                    file:bg-indigo-600
+                    file:bg-gradient-to-r from-indigo-600 to-purple-600
                     file:text-white
-                    hover:file:bg-indigo-700
+                    hover:file:bg-gradient-to-r from-indigo-600 to-purple-600
                 "
             />
         </div>
