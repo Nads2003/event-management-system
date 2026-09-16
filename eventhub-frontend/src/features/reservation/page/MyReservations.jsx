@@ -1,7 +1,7 @@
 // reservation/page/MyReservations.jsx
 import { useState, useEffect } from 'react';
 import ReservationList from "../components/ReservationList";
-import { useReservation } from "../hooks/useReservation";
+import { useMyReservations } from "../hooks/useMyReservations";
 // 👇 IMPORTANT: Utiliser le hook de auth, pas de reservation
 import { useAuth } from "../../auth/hooks/useAuth";
 import { getAuth } from "../../auth/utils/auth.storage";
@@ -34,7 +34,7 @@ export default function MyReservations() {
         validateReservation,
         cancelReservation,
         refreshReservations
-    } = useReservation(isOrganizer);
+    } = useMyReservations(isOrganizer);
 
     const handleValidate = async (reservationId) => {
         setValidatingId(reservationId);

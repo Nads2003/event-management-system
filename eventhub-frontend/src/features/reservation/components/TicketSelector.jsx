@@ -20,7 +20,9 @@ export default function TicketSelector({
 
                 <div
                     key={ticket.id}
-                    className="bg-white shadow rounded-2xl p-5 flex justify-between items-center dark:bg-indigo-900/40 dark:text-white"
+                    className="bg-white shadow rounded-2xl p-5 flex justify-between items-center  dark:bg-gray-900
+            text-gray-800
+            dark:text-gray-100"
                 >
 
                     <div>
