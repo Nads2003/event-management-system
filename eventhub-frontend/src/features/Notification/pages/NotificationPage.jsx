@@ -19,7 +19,8 @@ export default function NotificationPage() {
   } = useNotifications();
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-28 pb-16 dark:bg-gray-950">
+    <div className="min-h-screen  pt-28 pb-16 bg-gradient-to-br from-indigo-50 via-white to-purple-100
+      dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950">
       <div className="mx-auto max-w-3xl px-6">
         <div className="mb-8 flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600">

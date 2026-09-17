@@ -34,18 +34,20 @@ const handleSubmit = async (e) => {
   return (
     <div
       className="min-h-screen flex items-center justify-center px-4
-      bg-gradient-to-br from-purple-50 via-white to-indigo-100
-      dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950">
+      bg-gradient-to-br from-indigo-50 via-white to-purple-100
+      dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950 transition-all duration-500">
       <div
-        className="w-full max-w-lg bg-white/80 dark:bg-gray-900/80
-        backdrop-blur-xl rounded-3xl shadow-2xl p-8">
+        className="w-full max-w-lg 
+        bg-white/80 dark:bg-gray-900/80
+        backdrop-blur-xl rounded-3xl shadow-2xl
+        border border-white/50 dark:border-gray-700 p-8 transition-all">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center">
             <Calendar className="text-white" size={28} />
           </div>
 
-          <h2 className="text-3xl font-bold mt-4">Créer un compte</h2>
+          <h2 className="text-3xl font-bold mt-4 dark:text-white">Créer un compte</h2>
         </div>
 
         {/* FORM */}
@@ -67,7 +69,7 @@ const handleSubmit = async (e) => {
           </div>
 
           <div className="relative">
-            <Mail className="absolute left-4 top-4" size={18} />
+            <Mail className="absolute left-4 top-4 dark:text-gray-300" size={18} />
             <input
               name="email"
               onChange={handleChange}
@@ -77,7 +79,7 @@ const handleSubmit = async (e) => {
           </div>
 
           <div className="relative">
-            <Phone className="absolute left-4 top-4" size={18} />
+            <Phone className="absolute left-4 top-4 dark:text-gray-300" size={18} />
             <input
               name="phone"
               onChange={handleChange}
@@ -86,7 +88,7 @@ const handleSubmit = async (e) => {
             />
           </div>
           <div className="relative">
-            <Lock className="absolute left-4 top-4" size={18} />
+            <Lock className="absolute left-4 top-4 dark:text-gray-300" size={18} />
 
             <input
               name="password"
@@ -99,12 +101,12 @@ const handleSubmit = async (e) => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-4 text-gray-500">
+              className="absolute right-4 top-4 text-gray-500 dark:text-gray-300">
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
         <div className="relative">
-           <Lock className="absolute left-4 top-4" size={18} />
+           <Lock className="absolute left-4 top-4 dark:text-gray-300" size={18} />
 
   <input
     name="confirmPassword"
@@ -127,7 +129,7 @@ const handleSubmit = async (e) => {
           <select
             name="role"
             onChange={handleChange}
-            className="w-full p-4 rounded-2xl bg-gray-100 dark:bg-gray-800">
+            className="w-full p-4 rounded-2xl bg-gray-100 dark:bg-gray-800 dark:text-gray-300 mt-6">
             <option value="USER">User</option>
             <option value="ORGANIZER">Organizer</option>
           </select>
@@ -142,7 +144,7 @@ const handleSubmit = async (e) => {
         </form>
 
         {/* LOGIN */}
-        <p className="text-center mt-6">
+        <p className="text-center dark:text-gray-300 mt-6">
           Déjà un compte ?{" "}
           <Link to="/login" className="text-indigo-500 font-semibold">
             Se connecter
