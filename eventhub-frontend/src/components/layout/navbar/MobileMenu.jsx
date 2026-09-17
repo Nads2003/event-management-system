@@ -16,6 +16,7 @@ export default function MobileMenu({
   setMobileOpen,
   darkMode,
   toggleTheme,
+  unreadCount,
 }) {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
@@ -68,13 +69,25 @@ export default function MobileMenu({
 
       {/* Notifications */}
       <Link
-        to="/notifications"
-        onClick={() => setMobileOpen(false)}
-        className="flex items-center gap-2 py-2 dark:text-white"
-      >
-        <Bell size={18} />
-        Notifications
-      </Link>
+  to="/notifications"
+  onClick={() => setMobileOpen(false)}
+  className="relative flex items-center gap-2 py-2 dark:text-white"
+>
+  <span className="relative">
+    <Bell size={18} />
+    {unreadCount > 0 && (
+      <span className="absolute -top-1 -right-2 flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded-full bg-red-600 text-white text-[10px] font-bold">
+        {unreadCount > 9 ? "9+" : unreadCount}
+      </span>
+    )}
+  </span>
+  Notifications
+  {unreadCount > 0 && (
+    <span className="ml-auto bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+      {unreadCount}
+    </span>
+  )}
+</Link>
 
       {/* Créer */}
       {token && role === "ORGANIZER" && (

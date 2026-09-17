@@ -13,8 +13,9 @@ import {
   LogOut,
   CircleUserRound
 } from "lucide-react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
+import { getUnreadCount } from "../../../features/Notification/services/notificationService"
 import MobileMenu from "./MobileMenu";
 import { NAV_ITEMS } from "./navbar.data";
 import { useNavbar } from "./navbar.hooks";
@@ -34,10 +35,34 @@ export default function Navbar() {
     darkMode,
     toggleTheme,
   } = useNavbar();
-const navigate = useNavigate();
-const handleCreateEvent = () => {
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+  if (!token) {
+    setUnreadCount(0);
+    return;
+  }
+
+  const fetchUnread = async () => {
+    try {
+      const res = await getUnreadCount();  
+      setUnreadCount(res.data.count);
+    } catch {
+      setUnreadCount(0);
+    }
+  };
+
+  fetchUnread();
+
+  // rafraîchir toutes les 30s pour rester à jour
+  const interval = setInterval(fetchUnread, 30000);
+  return () => clearInterval(interval);
+}, [token]);
+  const navigate = useNavigate();
+  const handleCreateEvent = () => {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
+
 
   // pas connecté
   if (!token) {
@@ -140,9 +165,16 @@ const handleCreateEvent = () => {
     {darkMode ? <Sun /> : <Moon />}
   </button>
 
+  {token && (
   <Link to="/notifications" className="relative p-2 hover:text-indigo-600">
     <Bell />
+    {unreadCount > 0 && (
+      <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-600 text-white text-xs font-bold">
+        {unreadCount > 9 ? "9+" : unreadCount}
+      </span>
+    )}
   </Link>
+)}
 
   {token && role === "ORGANIZER" && (
     <button
@@ -211,11 +243,12 @@ const handleCreateEvent = () => {
       </div>
 
       <MobileMenu
-        mobileOpen={mobileOpen}
-        setMobileOpen={setMobileOpen}
-        darkMode={darkMode}
-        toggleTheme={toggleTheme}
-      />
+  mobileOpen={mobileOpen}
+  setMobileOpen={setMobileOpen}
+  darkMode={darkMode}
+  toggleTheme={toggleTheme}
+  unreadCount={unreadCount}
+/>
     </nav>
   );
 }
