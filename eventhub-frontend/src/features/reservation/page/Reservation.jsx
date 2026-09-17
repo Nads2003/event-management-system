@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useReservation } from "../hooks/useReservation";
-
+//importe les composants nécessaires pour la page de réservation
 import ReservationHeader from "../components/ReservationHeader";
 import TicketSelector from "../components/TicketSelector";
 import ReservationSummary from "../components/ReservationSummary";
