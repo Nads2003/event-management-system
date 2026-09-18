@@ -10,6 +10,7 @@ import TicketManagement from "../features/ticket/page/TicketManagement";
 import ReservationPage from "../features/reservation/page/Reservation";
 import MyReservations from "../features/reservation/page/MyReservations";
 import NotificationPage from "../features/Notification/pages/NotificationPage";
+import MyTickets from "../features/ticketGenerate/pages/MyTickets";
 function App() {
   return (
     <Routes>
@@ -28,6 +29,7 @@ function App() {
         <Route path="/events/:id/reservation" element={<ReservationPage />}/>
         <Route path="/mes-reservations" element={<MyReservations />} />
         <Route path="/notifications" element={<NotificationPage />} />
+        <Route path="/mes-billets" element={<MyTickets />} />
       </Route>
       
 
