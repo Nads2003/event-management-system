@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/tickets/**").permitAll()
                         .requestMatchers("/api/reservation/**").permitAll()
                         .requestMatchers("/api/notifications/**").permitAll()
+                        .requestMatchers("/api/tickets-generated/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

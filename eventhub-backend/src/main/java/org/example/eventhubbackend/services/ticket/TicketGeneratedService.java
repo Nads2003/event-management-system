@@ -1,5 +1,6 @@
 package org.example.eventhubbackend.services.ticket;
 
+import org.example.eventhubbackend.dto.reservation.EligibleReservationDTO;
 import org.example.eventhubbackend.dto.ticket.TicketGeneratedDTO;
 import org.example.eventhubbackend.entity.reservation.Reservation;
 
@@ -12,4 +13,7 @@ public interface TicketGeneratedService {
     List<TicketGeneratedDTO> getMyTickets(Long userId);
 
     List<TicketGeneratedDTO> getTicketsByReservation(Long reservationId);
+    List<EligibleReservationDTO> getMyEligibleReservations(Long userId);
+
+    List<TicketGeneratedDTO> generateTicketsForReservationId(Long reservationId, Long userId);
 }

@@ -1,12 +1,14 @@
 package org.example.eventhubbackend.services.ticket;
 
 import lombok.RequiredArgsConstructor;
+import org.example.eventhubbackend.dto.reservation.EligibleReservationDTO;
 import org.example.eventhubbackend.dto.ticket.TicketGeneratedDTO;
 import org.example.eventhubbackend.entity.reservation.Reservation;
 import org.example.eventhubbackend.entity.reservation.ReservationItem;
 import org.example.eventhubbackend.entity.reservation.ReservationStatus;
 import org.example.eventhubbackend.entity.payement.PaymentStatus;
 import org.example.eventhubbackend.entity.ticket.TicketGenerated;
+import org.example.eventhubbackend.repository.reservation.ReservationRepository;
 import org.example.eventhubbackend.repository.ticket.TicketGeneratedRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class TicketGeneratedServiceImpl implements TicketGeneratedService {
 
     private final TicketGeneratedRepository ticketGeneratedRepository;
+    private final ReservationRepository reservationRepository;
 
     @Override
     public List<TicketGeneratedDTO> generateTicketsForReservation(Reservation reservation) {
@@ -80,6 +83,8 @@ public class TicketGeneratedServiceImpl implements TicketGeneratedService {
 
     private TicketGeneratedDTO map(TicketGenerated t) {
         var event = t.getReservationItem().getTicket().getEvent();
+        var buyer = t.getReservationItem().getReservation().getUser();
+
         return TicketGeneratedDTO.builder()
                 .id(t.getId())
                 .ticketNumber(t.getTicketNumber())
@@ -89,6 +94,40 @@ public class TicketGeneratedServiceImpl implements TicketGeneratedService {
                 .eventTitle(event.getTitle())
                 .eventStartDate(event.getStartDate())
                 .ticketType(t.getReservationItem().getTicket().getType().name())
+                .buyerFirstName(buyer.getFirstName())
+                .buyerLastName(buyer.getLastName())
+                .buyerEmail(buyer.getEmail())
                 .build();
+    }
+    @Override
+    public List<EligibleReservationDTO> getMyEligibleReservations(Long userId) {
+        List<Reservation> reservations = reservationRepository
+                .findByUserIdAndStatusAndPaymentStatus(userId, ReservationStatus.CONFIRMED, PaymentStatus.PAID);
+
+        return reservations.stream()
+                .map(r -> EligibleReservationDTO.builder()
+                        .id(r.getId())
+                        .reservationCode(r.getReservationCode())
+                        .totalAmount(r.getTotalAmount())
+                        .createdAt(r.getCreatedAt())
+                        .eventTitle(r.getEvent().getTitle())
+                        .eventStartDate(r.getEvent().getStartDate())
+                        .ticketsGenerated(
+                                ticketGeneratedRepository.existsByReservationItem_Reservation_Id(r.getId())
+                        )
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<TicketGeneratedDTO> generateTicketsForReservationId(Long reservationId, Long userId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("Réservation introuvable"));
+
+        if (!reservation.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("Cette réservation ne vous appartient pas.");
+        }
+
+        return generateTicketsForReservation(reservation);
     }
 }
