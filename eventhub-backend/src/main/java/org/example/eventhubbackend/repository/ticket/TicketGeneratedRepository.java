@@ -13,4 +13,5 @@ public interface TicketGeneratedRepository extends JpaRepository<TicketGenerated
     List<TicketGenerated> findByReservationItem_Reservation_Id(Long reservationId);
 
     List<TicketGenerated> findByReservationItem_Reservation_User_Id(Long userId);
+    boolean existsByReservationItem_Reservation_Id(Long reservationId);
 }

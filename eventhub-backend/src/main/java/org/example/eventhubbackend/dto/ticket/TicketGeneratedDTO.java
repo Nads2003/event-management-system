@@ -19,4 +19,9 @@ public class TicketGeneratedDTO {
     private String eventTitle;
     private LocalDateTime eventStartDate;
     private String ticketType;
+
+    // Informations acheteur
+    private String buyerFirstName;
+    private String buyerLastName;
+    private String buyerEmail;
 }

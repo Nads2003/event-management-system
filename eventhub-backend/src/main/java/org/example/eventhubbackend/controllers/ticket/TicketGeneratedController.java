@@ -1,6 +1,7 @@
 package org.example.eventhubbackend.controllers.ticket;
 
 import lombok.RequiredArgsConstructor;
+import org.example.eventhubbackend.dto.reservation.EligibleReservationDTO;
 import org.example.eventhubbackend.dto.ticket.TicketGeneratedDTO;
 import org.example.eventhubbackend.entity.user.User;
 import org.example.eventhubbackend.services.ticket.TicketGeneratedService;
@@ -24,5 +25,17 @@ public class TicketGeneratedController {
     @GetMapping("/reservation/{reservationId}")
     public List<TicketGeneratedDTO> getByReservation(@PathVariable Long reservationId) {
         return ticketGeneratedService.getTicketsByReservation(reservationId);
+    }
+    @GetMapping("/eligible-reservations")
+    public List<EligibleReservationDTO> getEligibleReservations(@AuthenticationPrincipal User currentUser) {
+        return ticketGeneratedService.getMyEligibleReservations(currentUser.getId());
+    }
+
+    @PostMapping("/generate/{reservationId}")
+    public List<TicketGeneratedDTO> generate(
+            @PathVariable Long reservationId,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        return ticketGeneratedService.generateTicketsForReservationId(reservationId, currentUser.getId());
     }
 }
