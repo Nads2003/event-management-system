@@ -154,7 +154,7 @@ export default function Navbar() {
       className="font-medium text-gray-700 dark:text-white hover:text-indigo-600"
     >
       {item.label}
-    </Link>
+    </Link> 
   ))}
 </div>
 
