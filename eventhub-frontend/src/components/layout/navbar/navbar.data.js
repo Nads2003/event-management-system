@@ -1,6 +1,5 @@
 export const NAV_ITEMS = [
-
-  { label: "Réservations", path: "/mes-reservations" },
-  { label: "Statistiques", path: "/statistiques" },
-  { label: "Mes billets", path: "/mes-billets" }
+  { label: "Réservations", path: "/mes-reservations", auth: true },
+  { label: "Statistiques", path: "/statistiques", auth: true, roles: ["ORGANIZER"] },
+  { label: "Mes billets", path: "/mes-billets", auth: true, roles: ["USER"] },
 ];
