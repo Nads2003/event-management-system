@@ -37,6 +37,11 @@ export default function Navbar() {
   } = useNavbar();
   const [unreadCount, setUnreadCount] = useState(0);
 
+  const visibleNavItems = NAV_ITEMS.filter((item) => {
+  if (item.auth && !token) return false;
+  if (item.roles && !item.roles.includes(role)) return false;
+  return true;
+});
   useEffect(() => {
   if (!token) {
     setUnreadCount(0);
@@ -53,6 +58,7 @@ export default function Navbar() {
   };
 
   fetchUnread();
+  
 
   // rafraîchir toutes les 30s pour rester à jour
   const interval = setInterval(fetchUnread, 30000);
@@ -78,6 +84,8 @@ export default function Navbar() {
 
   // organizer connecté
   navigate("/creer-event");
+
+
 };
   return (
     <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b shadow-lg">
@@ -147,15 +155,16 @@ export default function Navbar() {
   </div>
 
   {/* Autres menus */}
-  {NAV_ITEMS.map((item) => (
-    <Link
-      key={item.path}
-      to={item.path}
-      className="font-medium text-gray-700 dark:text-white hover:text-indigo-600"
-    >
-      {item.label}
-    </Link> 
-  ))}
+ {/* Autres menus */}
+{visibleNavItems.map((item) => (
+  <Link
+    key={item.path}
+    to={item.path}
+    className="font-medium text-gray-700 dark:text-white hover:text-indigo-600"
+  >
+    {item.label}
+  </Link>
+))}
 </div>
 
         {/* ACTIONS */}
@@ -242,12 +251,13 @@ export default function Navbar() {
         </button>
       </div>
 
-      <MobileMenu
+<MobileMenu
   mobileOpen={mobileOpen}
   setMobileOpen={setMobileOpen}
   darkMode={darkMode}
   toggleTheme={toggleTheme}
   unreadCount={unreadCount}
+  visibleNavItems={visibleNavItems}
 />
     </nav>
   );

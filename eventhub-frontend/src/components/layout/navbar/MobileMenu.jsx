@@ -9,7 +9,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
-import { NAV_ITEMS } from "./navbar.data";
+
 
 export default function MobileMenu({
   mobileOpen,
@@ -17,6 +17,7 @@ export default function MobileMenu({
   darkMode,
   toggleTheme,
   unreadCount,
+  visibleNavItems,
 }) {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
@@ -54,16 +55,17 @@ export default function MobileMenu({
       </Link>
 
       {/* Menus supplémentaires */}
-      {NAV_ITEMS.map((item) => (
-        <Link
-          key={item.path}
-          to={item.path}
-          onClick={() => setMobileOpen(false)}
-          className="block py-2 dark:text-white"
-        >
-          {item.label}
-        </Link>
-      ))}
+     {/* Menus supplémentaires */}
+{visibleNavItems.map((item) => (
+  <Link
+    key={item.path}
+    to={item.path}
+    onClick={() => setMobileOpen(false)}
+    className="block py-2 dark:text-white"
+  >
+    {item.label}
+  </Link>
+))}
 
       <hr className="dark:border-gray-700" />
 

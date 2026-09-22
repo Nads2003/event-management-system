@@ -4,20 +4,24 @@ Une plateforme web moderne de gestion d’événements permettant aux utilisateu
 
 ## Fonctionnalités
 
-### Utilisateur
+### Participant (Utilisateur)
 - Consulter les événements disponibles
 - Rechercher un événement
 - Filtrer par catégorie
 - Réserver un billet
 - Consulter ses réservations
+- Générer et télécharger son billet (QR code + PDF) une fois la réservation confirmée et payée
+- Recevoir des notifications en temps réel (nouvel événement, réservation validée/refusée)
 - Authentification / Connexion
 
-### Administrateur
-- Ajouter un événement
+### Organisateur
+- Créer un événement
 - Modifier un événement
 - Supprimer un événement
-- Gérer les utilisateurs
-- Suivre les réservations
+- Gérer les types de billets (tarifs, quantités disponibles)
+- Suivre les réservations de ses événements
+- Recevoir une notification à chaque nouvelle réservation
+- Consulter les statistiques de ses événements (revenus, billets vendus, top événements)
 
 ---
 
@@ -29,6 +33,9 @@ Une plateforme web moderne de gestion d’événements permettant aux utilisateu
 - Axios
 - React Router DOM
 - Lucide React
+- Recharts (statistiques)
+- qrcode.react (génération QR code)
+- jsPDF / html2canvas (export PDF des billets)
 
 ### Backend
 - Spring Boot
